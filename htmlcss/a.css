@@ -1,0 +1,29 @@
+.bg-red{
+    background-color: red;
+}
+body {
+background-color: lightblue;
+}
+ul{
+    font-size: 20px;
+}
+#num{
+    background-color:aliceblue;
+}
+h1 {
+color: white;
+text-align: center;
+}
+
+h1~p{
+    background-color: rgb(87, 155, 74);
+}
+ul p {
+font-family: verdana;
+font-size: 20px;
+background-color: black;
+color: yellow;
+}
+h1+p{
+    background-color: blue;
+}
