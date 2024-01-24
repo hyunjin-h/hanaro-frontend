@@ -3,4 +3,4 @@ ignore.txt
 .vscode
 .vscode/*
 node_modules
-distgit
+dist
