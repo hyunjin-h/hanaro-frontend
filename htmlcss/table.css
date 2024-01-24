@@ -1,0 +1,19 @@
+table.type11 {
+	border: 3px solid #0800ff;
+	border-collapse: collapse;
+	text-align: center;
+	margin: 20px 10px;
+}
+
+table.type11 th {
+	padding: 10px;
+	border: 2px dotted #0800ff;
+	font-weight: bold;
+	color: #000000;
+	background: #72b4ff;
+}
+
+table.type11 td {
+	padding: 10px;
+	border: 2px dotted #0800ff;
+}
