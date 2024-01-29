@@ -1,11 +1,15 @@
 let arr = [
-	["A", 10, 20],
-	["B", 30, 40],
-	["C", 50, 60, 70],
+  ["A", 10, 20],
+  ["B", 30, 40],
+  ["C", 50, 60, 70],
 ];
 const obj = {};
-// function makeObjectFromArray(arr) {}
-for (let key in arr) {
-	obj[arr[key][0]] = [...arr[key]];
+function makeObjectFromArray(arr) {
+  for (let key in arr) {
+    //   console.log(arr[key]);
+    const [k, ...rest] = arr[key];
+    obj[k] = rest;
+  }
+  console.log(obj);
 }
-console.log(obj);
+makeObjectFromArray(arr);
