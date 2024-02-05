@@ -1,80 +1,63 @@
-import { rand } from "./utils/index.js";
-const randTime = new Promise();
+// import { rand } from "./utils/index.js";
+// const randtime = new Promise((resolve) => {
+// 	const sec = rand(1, 4) * 500;
+// 	setTimeout(() => resolve(sec), sec);
+// });
 
-function Promise(cb) {
-	const thenFns = [];
-	const catchFns = [];
-	const finalFns = [];
+// const randTime = () =>
+// 	new Promise((resolve) => {
+// 		const sec = rand(1, 4) * 500;
+// 		setTimeout(() => {
+// 			console.log("sec=", sec);
+// 			resolve(sec);
+// 		}, sec);
+// 	});
 
-	cb(
-		(succ) => thenRecur(succ),
-		(err) => catchRecur(err)
-	);
+// const isParellel = true;
+// console.time("promi");
+// if (isParellel) {
+// 	Promise.all([randTime(), randTime(), randTime()]).then(() => console.timeEnd("promi"));
+// } else {
+// 	randTime()
+// 		.then((x) => {
+// 			return randTime();
+// 		})
+// 		.then((x) => {
+// 			return randTime();
+// 		})
+// 		.then((x) => {
+// 			return randTime();
+// 		})
+// 		.then(() => console.timeEnd("promi"));
+// }
 
-	Promise.prototype.then = (fn) => {
-		thenFns.push(fn);
-		return this;
-	};
+// setTimeout(function () {
+// 	console.log("depth1", new Date());
+// 	setTimeout(function () {
+// 		console.log("depth2", new Date());
+// 		setTimeout(function () {
+// 			console.log("depth3", new Date());
+// 			throw new Error("Already 3-depth!!");
+// 		}, 3000);
+// 	}, 2000);
+// }, 1000);
 
-	Promise.prototype.catch = (fn) => {
-		catchFns.push(fn);
-		return this;
-	};
+const timer = (n) =>
+	new Promise((resolve, reject) => {
+		const sec = n * 1000;
+		if (n <= 3) {
+			setTimeout(() => {
+				console.log(`depth${n}`, new Date());
+				resolve(sec);
+			}, sec);
+		} else reject(new Error("Error!"));
+	});
 
-	Promise.prototype.finally = (fn) => {
-		finalFns.push(fn);
-		return this;
-	};
-
-	const finalRunner = () => {
-		for (const f of finalFns) f();
-	};
-
-	const catchRecur = (preErr) => {
-		this.state = "rejected";
-		const fn = catchFns.shift();
-		if (!fn) {
-			finalRunner();
-			if (preErr instanceof Error) throw preErr;
-			else throw new Error(preErr);
-		}
-
-		try {
-			fn(preErr);
-			return finalRunner();
-		} catch (error) {
-			catchRecur(error);
-		}
-	};
-	const thenRecur = (preRet) => {
-		const fn = thenFns.shift();
-		if (!fn) {
-			this.state = "fulfilled";
-			return finalRunner();
-		}
-
-		if (preRet instanceof Promise) {
-			preRet
-				.then((res) => {
-					const r = fn(res);
-					console.log("🚀  r:", r);
-					r.catch((e) => {
-						catchRecur(e);
-					});
-				})
-				.then(thenRecur)
-				.catch((err) => {
-					catchRecur(err);
-				});
-		} else {
-			try {
-				const ret = fn(preRet);
-				thenRecur(ret);
-			} catch (error) {
-				catchRecur(error);
-			}
-		}
-	};
-
-	this.state = "pending";
-}
+console.log("START!", new Date());
+timer(1)
+	.then(() => timer(2))
+	.then(() => timer(3))
+	.then(() => timer(4))
+	.catch((err) => {
+		console.log("errrrrr");
+	});
