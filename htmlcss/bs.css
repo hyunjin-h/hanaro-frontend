@@ -1,39 +1,40 @@
-@media (min-width: 576px) { 
-    body::before{
-        content:'SM';
+@media (min-width: 576px) {
+    body::before {
+        content: 'SM';
     }
 }
 
 
-@media (min-width: 768px) { 
-    body::before{
-        content:'M';
+@media (min-width: 768px) {
+    body::before {
+        content: 'M';
     }
- }
-
-
-@media (min-width: 992px) { 
-    body::before{
-        content:'L';
-    }
- }
-
-
-@media (min-width: 1200px) { 
-    body::before{
-        content:'XL';
-    } 
 }
 
 
-@media (min-width: 1400px) { 
-    body::before{
-        content:'XXL';
+@media (min-width: 992px) {
+    body::before {
+        content: 'L';
     }
- }
- .box {
+}
+
+
+@media (min-width: 1200px) {
+    body::before {
+        content: 'XL';
+    }
+}
+
+
+@media (min-width: 1400px) {
+    body::before {
+        content: 'XXL';
+    }
+}
+
+.box {
     background-color: pink;
     border: 1px solid red;
     min-height: 2rem;
     font-size: 2rem;
-  }
+}
