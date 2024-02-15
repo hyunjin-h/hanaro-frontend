@@ -482,3 +482,4 @@ const idxsig2: IndexSignature2 = {
 };
 
 const arr22: Array<number> = [1, 2, 3];
+export {};
