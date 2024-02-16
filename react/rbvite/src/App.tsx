@@ -38,7 +38,7 @@ function App() {
     <>
       <h2>count: {count}</h2>
       <My session={session} login={login} logout={logout} />
-      <Hello name={session.loginUser?.name} age={count} plusCount={plusCount}>
+      <Hello name='홍길동' age={count} plusCount={plusCount}>
         <h3>반갑습니다~</h3>
       </Hello>
     </>
