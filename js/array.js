@@ -121,8 +121,8 @@ console.log("🚀  mret1:", mret1);
 const overId1 = orr.filter((item) => item.id > 1);
 console.log("🚀  overId1:", overId1);
 const overId2 = orr.filter((item, idx) => {
-	console.log(idx, item);
-	return item.id > 1;
+  console.log(idx, item);
+  return item.id > 1;
 });
 console.log("🚀  overId2:", overId2);
 console.log("==============================");
@@ -152,8 +152,8 @@ console.log("🚀  a1_2:", a1_2);
 
 const a22 = [2, 22];
 function myConcat(...args) {
-	const argsArr = Array.isArray(args[0]) ? args[0] : args;
-	return [...a22, ...argsArr];
+  const argsArr = Array.isArray(args[0]) ? args[0] : args;
+  return [...a22, ...argsArr];
 }
 
 const a22_1 = myConcat(3, 33);
@@ -169,20 +169,20 @@ const a5 = [1, 5, 20, 3, 4, 10];
 console.log("🚀 ~ a5-sort:", [...a5].sort()); //unicode 정렬
 console.log(a5);
 console.log(
-	"🚀 ~ a5-sort-fn:",
-	a5.sort((a, b) => {
-		console.log("a,b=", a, b);
-		// return a > b ? 1 : -1;//역순이면 -1:1
-		return b - a; //a-b
-	})
+  "🚀 ~ a5-sort-fn:",
+  a5.sort((a, b) => {
+    console.log("a,b=", a, b);
+    // return a > b ? 1 : -1;//역순이면 -1:1
+    return b - a; //a-b
+  })
 );
 const users = [
-	{ id: 11, name: "hong" },
-	{ id: 20, name: "kim" },
-	{ id: 3, name: "lee" },
+  { id: 11, name: "hong" },
+  { id: 20, name: "kim" },
+  { id: 3, name: "lee" },
 ];
 users.sort((a, b) => {
-	a.id - b.id;
+  a.id - b.id;
 });
 console.log("🚀 ~ users.sort ~ users:", users);
 
@@ -226,29 +226,13 @@ for (let item of arr) sum1 = sum1 + item;
 console.log("🚀 ~ sum1:", sum1);
 const sum2 = arr.reduce((sum, item) => sum + item, 0);
 console.log("🚀 ~ sum2:", sum2);
-const namestr = users.reduce((acc, item) => `${acc}${acc ? " " : ""} ${item.name}`, "");
+const namestr = users.reduce(
+  (acc, item) => `${acc}${acc ? " " : ""} ${item.name}`,
+  ""
+);
 console.log(`namestr: ${namestr}`);
 
 const objs = [{ id: 1 }, { name: "Hong" }, { addr: "Seoul", id: 5 }];
 const objr = objs.reduce((acc, item) => ({ ...acc, ...item }), {});
 console.log("🚀 ~ objr:", objr);
 assert.deepStrictEqual(objr, { id: 5, name: "Hong", addr: "Seoul" });
-
-console.log("==============================");
-console.log("===========연습문제============");
-console.log("==============================");
-console.log();
-const hong = { id: 1, name: "Hong" };
-const choi = { id: 5, name: "Choi" };
-const kim = { id: 2, name: "kim" };
-const lee = { id: 3, name: "Lee" };
-const park = { id: 4, name: "Park" };
-const users_arr = [kim, lee, park];
-const addUser = (arg) => [...users_arr, arg];
-console.log(addUser(hong));
-console.log(users_arr);
-const removeUser = (arg) => {
-	const idx = users_arr.findIndex((a) => a === arg);
-	return [...users_arr.slice(0, idx), ...users_arr.slice(idx + 1)];
-};
-console.log(removeUser(lee));
