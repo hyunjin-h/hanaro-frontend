@@ -9,6 +9,7 @@ type Props = {
   login: (id: number, name: string) => void;
   logout: () => void;
   removeItem: (itemId: number) => void;
+  addCartItem: (itemName: string, itemPrice: number) => void;
 };
 
 export const My = ({
@@ -16,6 +17,7 @@ export const My = ({
   login,
   logout,
   removeItem,
+  addCartItem,
 }: Props) => {
   // if (loginUser) loginUser.name = 'XXXXXXX';
   // removeItem = (itemId: number) => {
@@ -30,7 +32,9 @@ export const My = ({
       ) : (
         <Login login={login} />
       )}
-
+      <input type='text' value='itemName' />
+      <input type='text' value='itemName' />
+      <input type='text' value='itemName' />
       <ul>
         {cart.map(({ id, name, price }: Cart) => (
           <li key={id}>

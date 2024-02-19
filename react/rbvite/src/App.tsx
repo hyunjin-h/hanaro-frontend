@@ -31,6 +31,7 @@ const SampleSession: Session = {
 function App() {
   const [count, setCount] = useState(0);
   const [session, setSession] = useState<Session>(SampleSession);
+  // const itemName = useRef('');
 
   const titleRef = useRef<HTMLHeadingElement>(null);
   // const plusCount = () => setCount(count + 1);
@@ -53,6 +54,9 @@ function App() {
     // VirtualDOM의 rerender가 호출 안함(:session의 주소는 안변했으니까!)
     // session.cart = session.cart.filter((item) => item.id !== itemId);
   };
+  // const addCartItem = (itemName: string, itemPrice: number) => {
+  //   setSession({ ...session, cart: [...session.cart,{id:100,name:itemName,price:}] });
+  // };
   console.log('Declare-Area!');
   return (
     <>
@@ -65,6 +69,7 @@ function App() {
         login={login}
         logout={logout}
         removeItem={removeItem}
+        // addCartItem={addCartItem}
       />
       <Hello
         name={session.loginUser?.name || 'Guest'}
