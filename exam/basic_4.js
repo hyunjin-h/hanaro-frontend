@@ -13,16 +13,17 @@ class Collection {
 		this.#arr.push(value);
 		return this;
 	}
-	isStack() {
+	#isStack() {
+		// private을 줘야 완벽한 코드입니다!
 		return this.constructor.name === "Stack";
 	}
 	// 가장 (Stack:나중, Queue:먼저) 들어간 요소 반환 (요소 삭제 없음!)
 	get peek() {
-		return this.#arr.at(this.isStack() ? -1 : 0); //stack이면 마지막꺼 queue면 처음꺼
+		return this.#arr.at(this.#isStack() ? -1 : 0); // stack이면 마지막꺼 queue면 처음꺼
 	}
 	// 가장 (Stack:나중, Queue:먼저) 들어간 요소 반환 & 삭제
 	get poll() {
-		return this.isStack() ? this.#arr.pop() : this.#arr.shift();
+		return this.#isStack() ? this.#arr.pop() : this.#arr.shift();
 	}
 	// 모든 원소 지우기
 	clear() {
