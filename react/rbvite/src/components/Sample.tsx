@@ -1,15 +1,56 @@
 import { ChangeEvent, useState } from 'react';
 
+const CITIES = ['서울', '대구', '경기', '부산'];
+
 export default function Sample() {
   const [nickname, setNickname] = useState('Hong');
+  const [address, setAddress] = useState('address');
+  const [age, setAge] = useState(0);
+
   const changeNinkname = (e: ChangeEvent<HTMLInputElement>) =>
     setNickname(e.currentTarget.value);
   return (
     <>
-      <div>
-        <h1>Sample</h1>
-        <h5>nickname:{nickname}</h5>
-        <input type='text' value={nickname} onChange={changeNinkname} />
+      <div style={{ alignItems: 'center' }}>
+        <h1>Hooks Sample</h1>
+        <h5>
+          info: {nickname} ({age}세) - {address}
+        </h5>
+        <div>
+          <input type='text' value={nickname} onChange={changeNinkname} />
+          <input
+            type='number'
+            value={age}
+            onChange={(e) => setAge(+e.currentTarget.value)} //valueAsNumber
+          />
+
+          <input
+            type='text'
+            value={address}
+            onChange={(e) => setAddress(e.currentTarget.value)}
+          />
+
+          <select
+            style={{
+              width: '300px',
+              height: '30px',
+              display: 'flex',
+              margin: 'auto',
+            }}
+            value={address}
+            onChange={(e) => setAddress(e.currentTarget.value)}
+          >
+            {CITIES.map((item) => (
+              <option key={item} value={item}>
+                {item}
+              </option>
+            ))}
+            {/* <option hidden>==선택==</option>
+            <option value='성수'>성수</option>
+            <option value='송파'>송파</option>
+            <option value='알파코'>알파코</option> */}
+          </select>
+        </div>
       </div>
     </>
   );

@@ -1,14 +1,40 @@
-export const Login = ({ login }: { login: () => void }) => {
+import { FormEvent, useRef, useState } from 'react';
+type Props = {
+  login: (id: number, name: string) => void;
+};
+
+export const Login = ({ login }: Props) => {
+  // const [id, setId] = useState(0);
+  const idRef = useRef<HTMLInputElement | null>(null);
+  const [name, setName] = useState('');
+  const makeLogin = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault(); //submit 기본 기능 무력화!
+    console.log(`makeLogin#${idRef.current?.value}#`);
+    if (!idRef.current || !idRef.current.value) {
+      //if(!idRef.current?value)
+      alert('입력핫요');
+      idRef.current?.focus();
+      return;
+    }
+    const id = idRef.current.value;
+    login(+id, name);
+  };
   return (
     <>
-      <form>
+      <form onSubmit={makeLogin}>
         <div>
-          LoginID: <input type='text' />
+          <span>LoginID:</span>
+          <input type='number' ref={idRef} />
         </div>
+        {/* <div>
+          LoginID:
+          <input type='text' onChange={(e) => setId(+e.currentTarget.value)} />
+        </div> */}
         <div>
-          LoginName: <input type='text' />
+          LoginName:
+          <input type='text' onChange={(e) => setName(e.currentTarget.value)} />
         </div>
-        <button onClick={login}>Sign-in</button>
+        <button type='submit'>Sign-in</button>
       </form>
     </>
   );

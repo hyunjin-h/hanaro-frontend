@@ -19,8 +19,8 @@ export type Session = {
 };
 
 const SampleSession: Session = {
-  // loginUser: null,
-  loginUser: { id: 1, name: 'Hong' },
+  loginUser: null,
+  // loginUser: { id: 1, name: 'Hong' },
   cart: [
     { id: 100, name: '라면', price: 3000 },
     { id: 101, name: '컵라면', price: 2000 },
@@ -34,18 +34,35 @@ function App() {
 
   // const plusCount = () => setCount(count + 1);
   const plusCount = () => setCount((prevCount) => prevCount + 1);
-  const login = () => {};
+  const login = (id: number, name: string) => {
+    setSession({ ...session, loginUser: { id, name } });
+  };
   const logout = () => {
     // setSession({ cart: [...session.cart], loginUser: null });
     // session.loginUser = null;
     setSession({ ...session, loginUser: null });
+  };
+  const removeItem = (itemId: number) => {
+    setSession({
+      ...session,
+      // cart: [...session.cart.filter((item) => item.id !== itemId)], // 더 순수함수에 가깝게 보임
+      cart: session.cart.filter((item) => item.id !== itemId),
+    });
+
+    // VirtualDOM의 rerender가 호출 안함(:session의 주소는 안변했으니까!)
+    // session.cart = session.cart.filter((item) => item.id !== itemId);
   };
   console.log('Declare-Area!');
   return (
     <>
       <h1 style={{ color: 'white', backgroundColor: 'red' }}>Vite + React</h1>
       {/* <H5 ss={`First-Component ${count}`} /> */}
-      <My session={session} login={login} logout={logout} />
+      <My
+        session={session}
+        login={login}
+        logout={logout}
+        removeItem={removeItem}
+      />
       <Hello
         name={session.loginUser?.name || 'Guest'}
         age={count}
