@@ -5,13 +5,11 @@ type Props = {
   logout: () => void;
 };
 
-const Profile = ({ loginUser, logout }: Props) => {
-  console.log('@@@Profile');
+export const Profile = ({ loginUser, logout }: Props) => {
   return (
     <>
-      <div>User Name: {loginUser.name}</div>
-      <button onClick={logout}>Logout</button>
+      <h3>이름: {loginUser.name}</h3>
+      <button onClick={logout}>Sign-out</button>
     </>
   );
 };
-export default Profile;

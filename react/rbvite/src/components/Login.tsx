@@ -1,21 +1,15 @@
-type Props = {
-  login: () => void;
-};
-
-const Login = ({ login }: Props) => {
-  console.log('@@@Login');
+export const Login = ({ login }: { login: () => void }) => {
   return (
     <>
       <form>
         <div>
-          Login ID(숫자): <input type='number' />
+          LoginID: <input type='text' />
         </div>
         <div>
-          Login Name: <input type='text' />
+          LoginName: <input type='text' />
         </div>
-        <button onClick={login}>Login</button>
+        <button onClick={login}>Sign-in</button>
       </form>
     </>
   );
 };
-export default Login;
