@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { ChangeEvent, useRef, useState } from 'react';
 // import reactLogo from './assets/react.svg';
 // import viteLogo from '/vite.svg';
 import './App.css';
@@ -31,7 +31,6 @@ const SampleSession: Session = {
 function App() {
   const [count, setCount] = useState(0);
   const [session, setSession] = useState<Session>(SampleSession);
-  // const itemName = useRef('');
 
   const titleRef = useRef<HTMLHeadingElement>(null);
   // const plusCount = () => setCount(count + 1);
@@ -54,22 +53,26 @@ function App() {
     // VirtualDOM의 rerender가 호출 안함(:session의 주소는 안변했으니까!)
     // session.cart = session.cart.filter((item) => item.id !== itemId);
   };
-  // const addCartItem = (itemName: string, itemPrice: number) => {
-  //   setSession({ ...session, cart: [...session.cart,{id:100,name:itemName,price:}] });
-  // };
+  const addCartItem = (itemName: string, itemPrice: number) => {
+    const lastId = session.cart[session.cart.length - 1].id;
+    const tempId = lastId + 1;
+    setSession({
+      ...session,
+      cart: [...session.cart, { id: tempId, name: itemName, price: itemPrice }],
+    });
+  };
   console.log('Declare-Area!');
   return (
     <>
-      <h1 ref={titleRef} style={{ color: 'white', backgroundColor: 'red' }}>
+      <h1 ref={titleRef} style={{ color: 'white', backgroundColor: 'green' }}>
         Vite + React
       </h1>
-      {/* <H5 ss={`First-Component ${count}`} /> */}
       <My
         session={session}
         login={login}
         logout={logout}
         removeItem={removeItem}
-        // addCartItem={addCartItem}
+        addCartItem={addCartItem}
       />
       <Hello
         name={session.loginUser?.name || 'Guest'}
