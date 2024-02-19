@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useRef, useState } from 'react';
 
 const CITIES = ['서울', '대구', '경기', '부산'];
 
@@ -6,9 +6,13 @@ export default function Sample() {
   const [nickname, setNickname] = useState('Hong');
   const [address, setAddress] = useState('address');
   const [age, setAge] = useState(0);
+  const nameChangeCnt = useRef(0);
 
-  const changeNinkname = (e: ChangeEvent<HTMLInputElement>) =>
+  const changeNinkname = (e: ChangeEvent<HTMLInputElement>) => {
     setNickname(e.currentTarget.value);
+    nameChangeCnt.current += 1;
+  };
+
   return (
     <>
       <div style={{ alignItems: 'center' }}>
@@ -50,6 +54,14 @@ export default function Sample() {
             <option value='송파'>송파</option>
             <option value='알파코'>알파코</option> */}
           </select>
+          <button
+            onClick={() => {
+              alert(nameChangeCnt.current);
+              nameChangeCnt.current = 0;
+            }}
+          >
+            횟수출력
+          </button>
         </div>
       </div>
     </>
