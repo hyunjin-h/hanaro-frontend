@@ -1,15 +1,30 @@
-import { ChangeEvent, useRef, useState } from 'react';
+import {
+  ChangeEvent,
+  Children,
+  ForwardedRef,
+  createRef,
+  forwardRef,
+  useRef,
+  useState,
+  Ref,
+} from 'react';
 // import reactLogo from './assets/react.svg';
 // import viteLogo from '/vite.svg';
 import './App.css';
 import Hello from './components/Hello';
-import { My } from './components/My';
+import My from './components/My';
 
 // {ss: 'FirstComponent' }
 // function H5(prop: { ss: string }) {
-// function H5({ ss }: { ss: string }) {
-//   return <h5>H55555566-{ss}</h5>;
-// }
+const H5 = forwardRef(({ ss }: { ss: string }, ref: Ref<HTMLInputElement>) => {
+  return (
+    <div style={{ border: '1px solid skyblue', marginBottom: '0.5rem' }}>
+      <h5>H55555566-{ss}</h5>
+      <input type='text' ref={ref} placeholder='child-input...' />
+    </div>
+  );
+});
+H5.displayName = 'H5';
 
 export type LoginUser = { id: number; name: string };
 export type Cart = { id: number; name: string; price: number };
@@ -19,8 +34,8 @@ export type Session = {
 };
 
 const SampleSession: Session = {
-  loginUser: null,
-  // loginUser: { id: 1, name: 'Hong' },
+  // loginUser: null,
+  loginUser: { id: 1, name: 'Hong' },
   cart: [
     { id: 100, name: '라면', price: 3000 },
     { id: 101, name: '컵라면', price: 2000 },
@@ -33,6 +48,10 @@ function App() {
   const [session, setSession] = useState<Session>(SampleSession);
 
   const titleRef = useRef<HTMLHeadingElement>(null);
+  const childInputRef = createRef<HTMLInputElement>();
+  const logoutBtnRef = createRef<HTMLButtonElement>();
+  const myItemControlRef = useRef<ItemHandler>(null);
+
   // const plusCount = () => setCount(count + 1);
   const plusCount = () => setCount((prevCount) => prevCount + 1);
   const login = (id: number, name: string) => {
@@ -53,6 +72,7 @@ function App() {
     // VirtualDOM의 rerender가 호출 안함(:session의 주소는 안변했으니까!)
     // session.cart = session.cart.filter((item) => item.id !== itemId);
   };
+  // 내가 짠 addCartItem
   const addCartItem = (itemName: string, itemPrice: number) => {
     const lastId = session.cart[session.cart.length - 1].id;
     const tempId = lastId + 1;
@@ -61,18 +81,77 @@ function App() {
       cart: [...session.cart, { id: tempId, name: itemName, price: itemPrice }],
     });
   };
+
+  const saveItem = ({ id, name, price }: Cart) => {
+    /* 내가 쓴 코드
+    if (!id) {
+      id = Math.max(...session.cart.map((item) => item.id), 0) + 1;
+      setSession({
+        ...session,
+        cart: [...session.cart, { id, name, price }],
+      });
+    } else {
+      const element = session.cart.find((item) => item.id === id);
+      console.log(element);
+      if (element) {
+        element.name = name;
+        element.price = price;
+      }
+      setSession({
+        ...session,
+      });
+    }
+     */
+
+    const { cart } = session;
+    const foundItem = id !== 0 && cart.find((item) => item.id === id);
+    if (!foundItem) {
+      id = Math.max(...session.cart.map((item) => item.id), 0) + 1;
+      cart.push({ id, name, price });
+    } else {
+      foundItem.name = name;
+      foundItem.price = price;
+    }
+    setSession({
+      ...session,
+      cart: [...cart],
+    });
+  };
   console.log('Declare-Area!');
   return (
     <>
       <h1 ref={titleRef} style={{ color: 'white', backgroundColor: 'green' }}>
         Vite + React
       </h1>
+      {/* ref={childInputRef} */}
+      {/* <button onClick={() => {
+        if (childInputRef.current) {
+          childInputRef.current.focus();
+        }
+      }} */}
+      <H5 ss={`First-Component ${count}`} ref={childInputRef} />
+      <button
+        onClick={() => {
+          if (childInputRef.current) {
+            childInputRef.current.value = 'XXXX';
+            childInputRef.current.select();
+          }
+        }}
+      >
+        call H5 input
+      </button>
+      <button onClick={() => logoutBtnRef.current?.click()}>
+        App-Sign-Out
+      </button>
+      <button onClick={() => logoutBtnRef.current?.click()}>Remove Item</button>
       <My
         session={session}
         login={login}
         logout={logout}
         removeItem={removeItem}
         addCartItem={addCartItem}
+        saveItem={saveItem}
+        ref={myItemControlRef}
       />
       <Hello
         name={session.loginUser?.name || 'Guest'}

@@ -1,16 +1,34 @@
-import { FormEvent, useRef, useState } from 'react';
+import {
+  FormEvent,
+  forwardRef,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from 'react';
 type Props = {
   login: (id: number, name: string) => void;
 };
+export type LoginHandler = {
+  noti: (msg: string) => void;
+  focusId: () => void;
+  focusName: () => void;
+};
 
-export const Login = ({ login }: Props) => {
+export const Login = forwardRef(({ login }: Props, ref) => {
   // const [id, setId] = useState(0);
-  const idRef = useRef<HTMLInputElement | null>(null);
   // const [name, setName] = useState('');
+  const idRef = useRef<HTMLInputElement | null>(null);
   const nameRef = useRef<HTMLInputElement | null>(null);
+
+  const handler = {
+    noti: (msg: string) => alert(msg),
+    focusId: () => idRef.current?.focus(),
+    focusName: () => nameRef.current?.focus(),
+  };
+
+  useImperativeHandle(ref, () => handler);
   const makeLogin = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault(); //submit 기본 기능 무력화!
-    // console.log(`makeLogin#${idRef.current?.value}#`);
     if (!idRef.current || !idRef.current.value) {
       //if(!idRef.current?value)
       alert('입력핫요');
@@ -45,4 +63,5 @@ export const Login = ({ login }: Props) => {
       </form>
     </>
   );
-};
+});
+Login.displayName = 'Login';
