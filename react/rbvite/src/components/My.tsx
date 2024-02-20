@@ -2,15 +2,21 @@ import { FormEvent, ForwardedRef, forwardRef, useRef, useState } from 'react';
 import { Cart, Session } from '../App';
 import { Login, LoginHandler } from './Login';
 import { Profile } from './Profile';
+import { useImperativeHandle } from 'react';
 type Props = {
   session: Session;
   login: (id: number, name: string) => void;
   logout: () => void;
-  removeItem: (itemId: number) => void;
+  removeItem: (itemId?: number) => void;
   addCartItem: (itemName: string, itemPrice: number) => void;
   saveItem: (item: Cart) => void;
+  
 };
-export type ItemHandler = {};
+export type ItemHandler = {
+  signOut:()=>void,
+  notify: (msg: string) => void,
+  removeItem: () => void,
+};
 const My = forwardRef(
   (
     {
@@ -29,7 +35,7 @@ const My = forwardRef(
     // };
     const itemNameRef = useRef<HTMLInputElement>(null);
     const itemPriceRef = useRef<HTMLInputElement>(null);
-    const logoutBtnRef = useRef<HTMLButtonElement>();
+    const logoutBtnRef = useRef<HTMLButtonElement>(null);
     // const itemIdRef = useRef(0);
     const [currId, setCurrId] = useState(0);
 
@@ -39,29 +45,9 @@ const My = forwardRef(
     const myItemControlRef: ItemHandler = {
       signOut: () => logoutBtnRef.current?.click(),
       notify: (msg: string) => setMessage(msg),
-
-      removeItem: () => {},
-      loginHandler: {},
+      removeItem: () => removeItem(),
     };
-
-    /*
-
-    const plusItem = (e: FormEvent<HTMLFormElement>) => {
-          e.preventDefault(); //submit 기본 기능 무력화!
-          if (!itemNameRef.current || !itemNameRef.current.value) {
-            alert('item이름 입력');
-            itemNameRef.current?.focus();
-            return;
-          } else if (!itemPriceRef.current?.value) {
-            alert('item 가격 입력');
-            itemPriceRef.current?.focus();
-            return;
-          }
-          const name = itemNameRef.current.value;
-          const price = +itemPriceRef.current.value;
-          addCartItem(name, price);
-        };
-    */
+    useImperativeHandle(ref, () => myItemControlRef);
 
     const saveCartItem = (e: FormEvent) => {
       e.preventDefault();
@@ -105,7 +91,7 @@ const My = forwardRef(
           <Profile
             loginUser={loginUser}
             logout={logout}
-            ref={myItemControlRef}
+            ref={logoutBtnRef}
           />
         ) : (
           <Login login={login} />

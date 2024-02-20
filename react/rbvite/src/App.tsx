@@ -8,6 +8,7 @@ import {
   useState,
   Ref,
 } from 'react';
+import { ItemHandler } from './components/My';
 // import reactLogo from './assets/react.svg';
 // import viteLogo from '/vite.svg';
 import './App.css';
@@ -49,12 +50,12 @@ function App() {
 
   const titleRef = useRef<HTMLHeadingElement>(null);
   const childInputRef = createRef<HTMLInputElement>();
-  const logoutBtnRef = createRef<HTMLButtonElement>();
   const myItemControlRef = useRef<ItemHandler>(null);
 
   // const plusCount = () => setCount(count + 1);
   const plusCount = () => setCount((prevCount) => prevCount + 1);
   const login = (id: number, name: string) => {
+    if(id)
     setSession({ ...session, loginUser: { id, name } });
   };
   const logout = () => {
@@ -62,16 +63,22 @@ function App() {
     // session.loginUser = null;
     setSession({ ...session, loginUser: null });
   };
-  const removeItem = (itemId: number) => {
-    setSession({
-      ...session,
-      // cart: [...session.cart.filter((item) => item.id !== itemId)], // 더 순수함수에 가깝게 보임
-      cart: session.cart.filter((item) => item.id !== itemId),
-    });
 
-    // VirtualDOM의 rerender가 호출 안함(:session의 주소는 안변했으니까!)
-    // session.cart = session.cart.filter((item) => item.id !== itemId);
+
+  const removeItem= (itemId?: number) => {
+    if(itemId){
+      setSession({
+        ...session,
+        // cart: [...session.cart.filter((item) => item.id !== itemId)], // 더 순수함수에 가깝게 보임
+        cart: session.cart.filter((item) => item.id !== itemId),
+      });
+      // VirtualDOM의 rerender가 호출 안함(:session의 주소는 안변했으니까!)
+      // session.cart = session.cart.filter((item) => item.id !== itemId);
+    }
+    else{setSession({...session,
+      cart: []});}
   };
+  
   // 내가 짠 addCartItem
   const addCartItem = (itemName: string, itemPrice: number) => {
     const lastId = session.cart[session.cart.length - 1].id;
@@ -81,28 +88,10 @@ function App() {
       cart: [...session.cart, { id: tempId, name: itemName, price: itemPrice }],
     });
   };
+  
+  
 
   const saveItem = ({ id, name, price }: Cart) => {
-    /* 내가 쓴 코드
-    if (!id) {
-      id = Math.max(...session.cart.map((item) => item.id), 0) + 1;
-      setSession({
-        ...session,
-        cart: [...session.cart, { id, name, price }],
-      });
-    } else {
-      const element = session.cart.find((item) => item.id === id);
-      console.log(element);
-      if (element) {
-        element.name = name;
-        element.price = price;
-      }
-      setSession({
-        ...session,
-      });
-    }
-     */
-
     const { cart } = session;
     const foundItem = id !== 0 && cart.find((item) => item.id === id);
     if (!foundItem) {
@@ -116,6 +105,7 @@ function App() {
       ...session,
       cart: [...cart],
     });
+
   };
   console.log('Declare-Area!');
   return (
@@ -140,10 +130,10 @@ function App() {
       >
         call H5 input
       </button>
-      <button onClick={() => logoutBtnRef.current?.click()}>
+      <button onClick={() => myItemControlRef.current?.signOut()}>
         App-Sign-Out
       </button>
-      <button onClick={() => logoutBtnRef.current?.click()}>Remove Item</button>
+      <button onClick={() => myItemControlRef.current?.removeItem()}>Remove Item</button>
       <My
         session={session}
         login={login}
