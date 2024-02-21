@@ -3,10 +3,7 @@ import { useCounter } from '../contexts/counter-context';
 import { useSession } from '../contexts/session-context';
 
 type Props = {
-  // age: number;
-  // plusCount: () => void;
   children: React.ReactNode;
-  // children: React.ReactElement;
 };
 // 첫번째 방식
 // const Hello = ({

@@ -49,10 +49,6 @@ export default function Sample() {
                 {item}
               </option>
             ))}
-            {/* <option hidden>==선택==</option>
-            <option value='성수'>성수</option>
-            <option value='송파'>송파</option>
-            <option value='알파코'>알파코</option> */}
           </select>
           <button
             onClick={() => {

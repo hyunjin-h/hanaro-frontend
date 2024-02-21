@@ -6,9 +6,7 @@ import {
   useRef,
 } from 'react';
 import { useSession } from '../contexts/session-context';
-// type Props = {
-//   login: (id: number, name: string) => void;
-// };
+
 export type LoginHandler = {
   noti: (msg: string) => void;
   focusId: () => void;

@@ -1,11 +1,4 @@
-import {
-  PropsWithChildren,
-  createContext,
-  useContext,
-  useRef,
-  useState,
-} from 'react';
-import { ItemHandler } from '../components/My';
+import { PropsWithChildren, createContext, useContext, useState } from 'react';
 
 export type LoginUser = { id: number; name: string };
 export type Cart = { id: number; name: string; price: number };
@@ -69,8 +62,6 @@ export const SessionProvider = ({ children }: PropsWithChildren) => {
     console.log('login!');
   };
   const logout = () => {
-    // setSession({ cart: [...session.cart], loginUser: null });
-    // session.loginUser = null;
     setSession({ ...session, loginUser: null });
   };
 

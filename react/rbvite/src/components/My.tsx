@@ -140,9 +140,7 @@ const My = forwardRef((_, ref: ForwardedRef<ItemHandler>) => {
           가격:
           <input ref={itemPriceRef} type='number' />
         </div>
-        {/* @Todo <button type='submit'>{itemIdRef.current ? '수정' : '추가'}</button> */}
         <button type='reset'>취소</button>
-        {/* <button type='submit'>저장</button> */}
         <button type='submit'>{currId ? '수정' : '추가'}</button>
       </form>
     </div>
