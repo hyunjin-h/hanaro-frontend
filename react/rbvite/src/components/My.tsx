@@ -2,16 +2,15 @@ import {
   FormEvent,
   ForwardedRef,
   forwardRef,
-  useContext,
+  useImperativeHandle,
   useRef,
   useState,
 } from 'react';
-import { Cart } from '../contexts/session-context';
+import { useCounter } from '../contexts/counter-context';
+import { Cart, useSession } from '../contexts/session-context';
+
 import { Login, LoginHandler } from './Login';
 import { Profile } from './Profile';
-import { useImperativeHandle } from 'react';
-import { useCounter } from '../contexts/counter-context';
-import { useSession } from '../contexts/session-context';
 
 export type ItemHandler = {
   signOut: () => void;
@@ -85,36 +84,25 @@ const My = forwardRef((_, ref: ForwardedRef<ItemHandler>) => {
           <h3>{message}</h3>
         </>
       )}
-      <h2>로그인{count}</h2>
-      {loginUser ? <Profile ref={logoutBtnRef} /> : <Login />}
-      <h2>장바구니</h2>
-      <ul style={{ listStyle: 'none', padding: '0' }}>
-        {cart.map(({ id, name, price }: Cart) => (
-          <li
-            onClick={() => {
-              if (itemNameRef.current && itemPriceRef.current) {
-                itemNameRef.current.value = name;
-                itemPriceRef.current.value = price.toString();
-              }
-              // itemIdRef.current = id;
-              setCurrId(id);
-            }}
-            key={id}
-            className={`pointer`}
-          >
-            <small>{id}. </small>
-            {name} ({price.toLocaleString()}원)
-            <button
-              title='removeItem'
-              onClick={() => {
-                removeItem(id);
-              }}
-              style={{ backgroundColor: 'skyblue' }}
-            >
-              X
-            </button>
-            <button
-              title='modifiedItem'
+      <div
+        style={{
+          border: '2px solid green',
+          marginBottom: '2rem',
+          padding: '1rem',
+        }}
+      >
+        <h2>로그인</h2>
+        {loginUser ? (
+          <Profile ref={logoutBtnRef} />
+        ) : (
+          <Login ref={loginHandlerRef} />
+        )}
+      </div>
+      <div>
+        <h2>장바구니</h2>
+        <ul style={{ listStyle: 'none', padding: '0' }}>
+          {cart.map(({ id, name, price }: Cart) => (
+            <li
               onClick={() => {
                 if (itemNameRef.current && itemPriceRef.current) {
                   itemNameRef.current.value = name;
@@ -123,12 +111,38 @@ const My = forwardRef((_, ref: ForwardedRef<ItemHandler>) => {
                 // itemIdRef.current = id;
                 setCurrId(id);
               }}
+              key={id}
+              className={`pointer`}
             >
-              edit
-            </button>
-          </li>
-        ))}
-      </ul>
+              <small>{id}. </small>
+              {name} ({price.toLocaleString()}원)
+              <button
+                title='removeItem'
+                onClick={() => {
+                  removeItem(id);
+                }}
+                style={{ backgroundColor: '#E5EFF7' }}
+              >
+                X
+              </button>
+              <button
+                title='modifiedItem'
+                onClick={() => {
+                  if (itemNameRef.current && itemPriceRef.current) {
+                    itemNameRef.current.value = name;
+                    itemPriceRef.current.value = price.toString();
+                  }
+                  // itemIdRef.current = id;
+                  setCurrId(id);
+                }}
+              >
+                edit
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+
       <h2>상품</h2>
       <form onSubmit={saveCartItem} onReset={() => setCurrId(0)}>
         {/* itemIdRef.current = 0 */}
@@ -143,6 +157,7 @@ const My = forwardRef((_, ref: ForwardedRef<ItemHandler>) => {
         <button type='reset'>취소</button>
         <button type='submit'>{currId ? '수정' : '추가'}</button>
       </form>
+      <h3>{count}</h3>
     </div>
   );
 });

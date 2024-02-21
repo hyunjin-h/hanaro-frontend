@@ -2,6 +2,7 @@ import {
   FormEvent,
   ForwardedRef,
   forwardRef,
+  useEffect,
   useImperativeHandle,
   useRef,
 } from 'react';
@@ -47,6 +48,11 @@ export const Login = forwardRef((_, ref: ForwardedRef<LoginHandler>) => {
     console.log('🚀  name:', name);
     login(id, name ?? '');
   };
+
+  useEffect(() => {
+    // alert('Please login....');
+    // return () => alert('logined');
+  }, []);
 
   return (
     <>

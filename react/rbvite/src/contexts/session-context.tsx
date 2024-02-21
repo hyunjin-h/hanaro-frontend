@@ -1,4 +1,12 @@
-import { PropsWithChildren, createContext, useContext, useState } from 'react';
+import {
+  PropsWithChildren,
+  ReactNode,
+  RefObject,
+  createContext,
+  useContext,
+  useState,
+} from 'react';
+import { ItemHandler } from '../components/My';
 
 export type LoginUser = { id: number; name: string };
 export type Cart = { id: number; name: string; price: number };
@@ -31,31 +39,34 @@ const SessionContext = createContext<SessionContextProps>({
   removeItem: () => {},
   saveItem: () => {},
 });
+type ProviderProps = {
+  children: ReactNode;
+  myHandlerRef?: RefObject<ItemHandler>;
+};
 
-export const SessionProvider = ({ children }: PropsWithChildren) => {
+export const SessionProvider = ({ children, myHandlerRef }: ProviderProps) => {
   const [session, setSession] = useState<Session>(SampleSession);
   // TODO: validation check focus!
   const login = (id: number, name: string) => {
-    // console.log(myHandlerRef.current);
-    // if (!myHandlerRef.current) return;
+    // if (!myHandlerRef?.current) return;
+    const loginNoti = myHandlerRef?.current?.loginHandler.noti || alert;
+    console.log('🚀  loginNoti:', loginNoti, id, name);
 
-    // const loginNoti = myHandlerRef.current.loginHandler.noti;
-    // console.log('🚀  loginNoti:', loginNoti);
     // if (!loginNoti) return;
 
-    // const focusId = myHandlerRef.current.loginHandler.focusId;
-    // const focusName = myHandlerRef.current.loginHandler.focusName;
+    const focusId = myHandlerRef?.current?.loginHandler.focusId;
+    console.log('🚀 ~ login ~ focusId:', typeof focusId);
+    const focusName = myHandlerRef?.current?.loginHandler.focusName;
 
     if (!id || isNaN(id)) {
-      alert('User ID를 입력하세요!');
-      // if (focusId) focusId();
+      loginNoti('User id을 입력하세요!');
+      if (focusId) focusId();
       return;
     }
 
     if (!name) {
-      alert('User name을 입력하세요!');
-      // loginNoti('User name을 입력하세요!');
-      // if (focusName) focusName();
+      loginNoti('User name을 입력하세요!');
+      if (focusName) focusName();
       return;
     }
     setSession({ ...session, loginUser: { id, name } });

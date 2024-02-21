@@ -1,10 +1,10 @@
-import { createRef, forwardRef, useRef, Ref } from 'react';
-import { ItemHandler } from './components/My';
+import { Ref, createRef, forwardRef, useRef } from 'react';
 import './App.css';
 import Hello from './components/Hello';
-import My from './components/My';
+import My, { ItemHandler } from './components/My';
 import { useCounter } from './contexts/counter-context';
 import { SessionProvider } from './contexts/session-context';
+import Effect from './components/Effect';
 
 const H5 = forwardRef(({ ss }: { ss: string }, ref: Ref<HTMLInputElement>) => {
   return (
@@ -25,6 +25,7 @@ function App() {
   console.log('Declare-Area!');
   return (
     <>
+      <Effect />
       <h1 ref={titleRef} style={{ color: 'white', backgroundColor: 'green' }}>
         Vite + React
       </h1>
@@ -45,7 +46,11 @@ function App() {
       <button onClick={() => myHandlerRef.current?.removeItem()}>
         Remove Item
       </button>
-      <SessionProvider>
+      <button onClick={() => myHandlerRef.current?.notify('테스트메시지')}>
+        Message
+      </button>
+      <button onClick={() => myHandlerRef.current?.removeItem()}>Rm2</button>
+      <SessionProvider myHandlerRef={myHandlerRef}>
         <My ref={myHandlerRef} />
         <Hello>Hello-children!!!!!!!!!!!</Hello>
       </SessionProvider>
