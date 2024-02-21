@@ -28,4 +28,7 @@ module.exports = {
     'prettier/prettier': 'error',
     quotes: ['error', 'single', { allowTemplateLiterals: true }],
   },
+  settings: {
+    react: { version: 'detect' }, // for react version warnning
+  },
 };

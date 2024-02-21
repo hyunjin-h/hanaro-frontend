@@ -1,22 +1,22 @@
 import {
   FormEvent,
+  ForwardedRef,
   forwardRef,
   useImperativeHandle,
   useRef,
-  useState,
 } from 'react';
-type Props = {
-  login: (id: number, name: string) => void;
-};
+import { useSession } from '../contexts/session-context';
+// type Props = {
+//   login: (id: number, name: string) => void;
+// };
 export type LoginHandler = {
   noti: (msg: string) => void;
   focusId: () => void;
   focusName: () => void;
 };
 
-export const Login = forwardRef(({ login }: Props, ref) => {
-  // const [id, setId] = useState(0);
-  // const [name, setName] = useState('');
+export const Login = forwardRef((_, ref: ForwardedRef<LoginHandler>) => {
+  const { login } = useSession();
   const idRef = useRef<HTMLInputElement | null>(null);
   const nameRef = useRef<HTMLInputElement | null>(null);
 
@@ -27,37 +27,40 @@ export const Login = forwardRef(({ login }: Props, ref) => {
   };
 
   useImperativeHandle(ref, () => handler);
+
   const makeLogin = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault(); //submit 기본 기능 무력화!
-    if (!idRef.current || !idRef.current.value) {
-      //if(!idRef.current?value)
-      alert('입력핫요');
-      idRef.current?.focus();
-      return;
-    } else if (!nameRef.current?.value) {
-      alert('유저네임입력하세요');
-      nameRef.current?.focus();
-      return;
-    }
-    const id = idRef.current.value;
-    const name = nameRef.current.value;
-    login(+id, name);
+    e.preventDefault(); // submit 기본 기능을 무력화!
+    // console.log(`makeLogin#${idRef.current?.value}#`);
+
+    // if (!idRef.current?.value) {
+    // if (!idRef.current || !idRef.current.value) {
+    //   alert('User ID를 입력하세요!');
+    //   idRef.current?.focus();
+    //   return;
+    // } else if (!nameRef.current?.value) {
+    //   alert('User name을 입력하세요!');
+    //   nameRef.current?.focus();
+    //   return;
+    // }
+
+    const id = Number(idRef.current?.value);
+    console.log('🚀  id:', id);
+    const name = nameRef.current?.value;
+    console.log('🚀  name:', name);
+    login(id, name ?? '');
   };
+
   return (
     <>
       <form onSubmit={makeLogin}>
         <div>
-          <span>LoginID:</span>
+          <span style={{ marginRight: '1em' }}>LoginID:</span>
           <input type='number' ref={idRef} />
         </div>
-        {/* <div>
-          LoginID:
-          <input type='text' onChange={(e) => setId(+e.currentTarget.value)} />
-        </div> */}
         <div>
           LoginName:
-          <input type='text' ref={nameRef} />
           {/* <input type='text' onChange={(e) => setName(e.currentTarget.value)} /> */}
+          <input type='text' ref={nameRef} />
         </div>
         <button type='submit'>Sign-in</button>
       </form>
