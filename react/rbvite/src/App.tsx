@@ -1,4 +1,11 @@
-import { Ref, createRef, forwardRef, useRef } from 'react';
+import {
+  Ref,
+  createRef,
+  forwardRef,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 import './App.css';
 import Hello from './components/Hello';
 import My, { ItemHandler } from './components/My';
@@ -14,16 +21,28 @@ const H5 = forwardRef(({ ss }: { ss: string }, ref: Ref<HTMLInputElement>) => {
   );
 });
 H5.displayName = 'H5';
+type Position = { x: number; y: number };
 
 function App() {
   const { count, plusCount } = useCounter();
+  const [position, setPosition] = useState<Position>({ x: 0, y: 0 });
+
   const myHandlerRef = useRef<ItemHandler>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const childInputRef = createRef<HTMLInputElement>();
+  const catchPosition = ({ x, y }: Position) => {
+    setPosition({ x, y });
+  };
+
+  useLayoutEffect(() => {
+    window.addEventListener('mousemove', catchPosition);
+    return () => window.removeEventListener('mousemove', catchPosition);
+  });
 
   console.log('Declare-Area!');
   return (
     <>
+      <small>{JSON.stringify(position)}</small>
       <h1 ref={titleRef} style={{ color: 'white', backgroundColor: 'green' }}>
         Vite + React
       </h1>

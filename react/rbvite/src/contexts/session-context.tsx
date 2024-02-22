@@ -3,7 +3,9 @@ import {
   ReactNode,
   RefObject,
   createContext,
+  useCallback,
   useContext,
+  useEffect,
   useState,
 } from 'react';
 import { ItemHandler } from '../components/My';
@@ -14,16 +16,12 @@ export type Session = {
   loginUser: LoginUser | null;
   cart: Cart[];
 };
-
-const SampleSession: Session = {
-  // loginUser: null,
-  loginUser: { id: 1, name: 'Hong' },
-  cart: [
-    { id: 100, name: '라면', price: 3000 },
-    { id: 101, name: '컵라면', price: 2000 },
-    { id: 200, name: '파', price: 5000 },
-  ],
-};
+//TODO: !!!
+// const setDefaultSession = async () => {
+//   const res = await fetch('/data/sample.json');
+//   const data = await res.json();
+//   setSession(data);
+// };
 
 type SessionContextProps = {
   session: Session;
@@ -33,7 +31,7 @@ type SessionContextProps = {
   saveItem: ({ id, name, price }: Cart) => void;
 };
 const SessionContext = createContext<SessionContextProps>({
-  session: SampleSession,
+  session: { loginUser: null, cart: [] },
   login: () => {},
   logout: () => {},
   removeItem: () => {},
@@ -45,38 +43,45 @@ type ProviderProps = {
 };
 
 export const SessionProvider = ({ children, myHandlerRef }: ProviderProps) => {
-  const [session, setSession] = useState<Session>(SampleSession);
-  // TODO: validation check focus!
-  const login = (id: number, name: string) => {
-    // if (!myHandlerRef?.current) return;
-    const loginNoti = myHandlerRef?.current?.loginHandler.noti || alert;
-    console.log('🚀  loginNoti:', loginNoti, id, name);
+  const [session, setSession] = useState<Session>({
+    loginUser: null,
+    cart: [],
+  });
 
-    // if (!loginNoti) return;
+  const login = useCallback(
+    (id: number, name: string) => {
+      // if (!myHandlerRef?.current) return;
+      const loginNoti = myHandlerRef?.current?.loginHandler.noti || alert;
+      console.log('🚀  loginNoti:', loginNoti, id, name);
 
-    const focusId = myHandlerRef?.current?.loginHandler.focusId;
-    console.log('🚀 ~ login ~ focusId:', typeof focusId);
-    const focusName = myHandlerRef?.current?.loginHandler.focusName;
+      // if (!loginNoti) return;
 
-    if (!id || isNaN(id)) {
-      loginNoti('User id을 입력하세요!');
-      if (focusId) focusId();
-      return;
-    }
+      const focusId = myHandlerRef?.current?.loginHandler.focusId;
+      console.log('🚀 ~ login ~ focusId:', typeof focusId);
+      const focusName = myHandlerRef?.current?.loginHandler.focusName;
 
-    if (!name) {
-      loginNoti('User name을 입력하세요!');
-      if (focusName) focusName();
-      return;
-    }
-    setSession({ ...session, loginUser: { id, name } });
-    console.log('login!');
-  };
-  const logout = () => {
+      if (!id || isNaN(id)) {
+        loginNoti('User id을 입력하세요!');
+        if (focusId) focusId();
+        return;
+      }
+
+      if (!name) {
+        loginNoti('User name을 입력하세요!');
+        if (focusName) focusName();
+        return;
+      }
+      setSession({ ...session, loginUser: { id, name } });
+      console.log('login!');
+    },
+    [myHandlerRef]
+  );
+
+  const logout = useCallback(() => {
     setSession({ ...session, loginUser: null });
-  };
+  }, []);
 
-  const removeItem = (itemId?: number) => {
+  const removeItem = useCallback((itemId?: number) => {
     if (itemId) {
       setSession({
         ...session,
@@ -88,9 +93,9 @@ export const SessionProvider = ({ children, myHandlerRef }: ProviderProps) => {
     } else {
       setSession({ ...session, cart: [] });
     }
-  };
+  }, []);
 
-  const saveItem = ({ id, name, price }: Cart) => {
+  const saveItem = useCallback(({ id, name, price }: Cart) => {
     const { cart } = session;
     const foundItem = id !== 0 && cart.find((item) => item.id === id);
     if (!foundItem) {
@@ -104,7 +109,24 @@ export const SessionProvider = ({ children, myHandlerRef }: ProviderProps) => {
       ...session,
       cart: [...cart],
     });
-  };
+  }, []);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    const { signal } = controller;
+
+    (async function () {
+      const res = await fetch('/data/sample.json', {
+        signal,
+      });
+      const data = await res.json();
+      setSession(data);
+    })();
+
+    return () => {
+      controller.abort();
+    };
+  }, []);
 
   return (
     <>

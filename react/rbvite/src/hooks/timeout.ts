@@ -1,16 +1,37 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
 export const useTimeout = (
-  cb: (...args: unknown[]) => void,
+  cb: () => void,
   delay: number,
   dependencies: unknown[] = []
 ) => {
+  const timerRef = useRef<ReturnType<typeof setTimeout>>();
+
+  const cbRef = useRef(cb);
+  cbRef.current = cb;
+  const delayRef = useRef(delay);
+  delayRef.current = delay;
+
+  const setup = useCallback(() => {
+    console.log('set-up', delay, delayRef.current);
+    timerRef.current = setTimeout(cbRef.current, delayRef.current);
+  }, []);
+
+  const clear = useCallback(() => {
+    console.log('clear');
+    clearTimeout(timerRef.current);
+  }, []);
+
+  const reset = useCallback(() => {
+    console.log('reset');
+    clear();
+    setup();
+  }, [setup, clear]);
+
   useEffect(() => {
-    const tmout = setTimeout(cb, delay);
-    return () => clearTimeout(tmout);
+    setup();
+    return clear;
   }, dependencies);
-  const reset = () => {};
-  const clear = () => {};
 
   return { reset, clear };
 };
