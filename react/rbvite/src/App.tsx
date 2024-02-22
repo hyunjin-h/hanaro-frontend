@@ -11,6 +11,7 @@ import Hello from './components/Hello';
 import My, { ItemHandler } from './components/My';
 import { useCounter } from './contexts/counter-context';
 import { SessionProvider } from './contexts/session-context';
+import { flushSync } from 'react-dom';
 
 const H5 = forwardRef(({ ss }: { ss: string }, ref: Ref<HTMLInputElement>) => {
   return (
@@ -46,11 +47,6 @@ function App() {
       <h1 ref={titleRef} style={{ color: 'white', backgroundColor: 'green' }}>
         Vite + React
       </h1>
-      <div className='card'>
-        <button onClick={plusCount}>count is {count}</button>
-        {/* setCount(count+1) 과의 차이점 확인
-        flushSync는 강제로 throttle 무마시킴 10번 rerender함 => no-batch-render */}
-      </div>
       <H5 ss={`First-Component ${count}`} ref={childInputRef} />
       <button
         onClick={() => {
@@ -72,6 +68,14 @@ function App() {
         Message
       </button>
       <button onClick={() => myHandlerRef.current?.removeItem()}>Rm2</button>
+      
+      <div className='card'>
+        <button onClick={()=>{
+          flushSync(plusCount)
+        }}>count is {count}</button>
+        {/* setCount(count+1) 과의 차이점 확인
+        flushSync는 강제로 throttle 무마시킴 10번 rerender함 => no-batch-render */}
+      </div>
       <SessionProvider myHandlerRef={myHandlerRef}>
         <My ref={myHandlerRef} />
         <Hello>Hello-children!!!!!!!!!!!</Hello>

@@ -1,5 +1,4 @@
 import {
-  PropsWithChildren,
   ReactNode,
   RefObject,
   createContext,
@@ -10,18 +9,6 @@ import {
 } from 'react';
 import { ItemHandler } from '../components/My';
 
-export type LoginUser = { id: number; name: string };
-export type Cart = { id: number; name: string; price: number };
-export type Session = {
-  loginUser: LoginUser | null;
-  cart: Cart[];
-};
-//TODO: !!!
-// const setDefaultSession = async () => {
-//   const res = await fetch('/data/sample.json');
-//   const data = await res.json();
-//   setSession(data);
-// };
 
 type SessionContextProps = {
   session: Session;
@@ -50,14 +37,10 @@ export const SessionProvider = ({ children, myHandlerRef }: ProviderProps) => {
 
   const login = useCallback(
     (id: number, name: string) => {
-      // if (!myHandlerRef?.current) return;
       const loginNoti = myHandlerRef?.current?.loginHandler.noti || alert;
       console.log('🚀  loginNoti:', loginNoti, id, name);
 
-      // if (!loginNoti) return;
-
       const focusId = myHandlerRef?.current?.loginHandler.focusId;
-      console.log('🚀 ~ login ~ focusId:', typeof focusId);
       const focusName = myHandlerRef?.current?.loginHandler.focusName;
 
       if (!id || isNaN(id)) {
@@ -72,7 +55,6 @@ export const SessionProvider = ({ children, myHandlerRef }: ProviderProps) => {
         return;
       }
       setSession({ ...session, loginUser: { id, name } });
-      console.log('login!');
     },
     [myHandlerRef]
   );
@@ -82,17 +64,13 @@ export const SessionProvider = ({ children, myHandlerRef }: ProviderProps) => {
   }, []);
 
   const removeItem = useCallback((itemId?: number) => {
-    if (itemId) {
-      setSession({
-        ...session,
-        // cart: [...session.cart.filter((item) => item.id !== itemId)], // 더 순수함수에 가깝게 보임
-        cart: session.cart.filter((item) => item.id !== itemId),
-      });
-      // VirtualDOM의 rerender가 호출 안함(:session의 주소는 안변했으니까!)
-      // session.cart = session.cart.filter((item) => item.id !== itemId);
-    } else {
-      setSession({ ...session, cart: [] });
-    }
+    setSession({
+      ...session,
+      // cart: [...session.cart.filter((item) => item.id !== itemId)], // 더 순수함수에 가깝게 보임
+      cart: session.cart.filter((item) => item.id !== itemId),
+    });
+    // VirtualDOM의 rerender가 호출 안함(:session의 주소는 안변했으니까!)
+    // session.cart = session.cart.filter((item) => item.id !== itemId);
   }, []);
 
   const saveItem = useCallback(({ id, name, price }: Cart) => {
@@ -107,7 +85,7 @@ export const SessionProvider = ({ children, myHandlerRef }: ProviderProps) => {
     }
     setSession({
       ...session,
-      cart: [...cart],
+      // cart: [...cart],
     });
   }, []);
 

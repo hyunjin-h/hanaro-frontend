@@ -7,7 +7,7 @@ import {
   useState,
 } from 'react';
 import { useCounter } from '../contexts/counter-context';
-import { Cart, useSession } from '../contexts/session-context';
+import { useSession } from '../contexts/session-context';
 
 import { Login, LoginHandler } from './Login';
 import { Profile } from './Profile';
