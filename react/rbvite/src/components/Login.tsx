@@ -5,8 +5,12 @@ import {
   useEffect,
   useImperativeHandle,
   useRef,
+  useState,
 } from 'react';
 import { useSession } from '../contexts/session-context';
+import { useCounter } from '../contexts/counter-context';
+import { useTimeout } from '../hooks/timeout';
+import { useToggle } from '../hooks/toggle';
 
 export type LoginHandler = {
   noti: (msg: string) => void;
@@ -18,6 +22,7 @@ export const Login = forwardRef((_, ref: ForwardedRef<LoginHandler>) => {
   const { login } = useSession();
   const idRef = useRef<HTMLInputElement | null>(null);
   const nameRef = useRef<HTMLInputElement | null>(null);
+  const { count, plusCount, minusCount } = useCounter();
 
   const handler = {
     noti: (msg: string) => alert(msg),
@@ -50,12 +55,38 @@ export const Login = forwardRef((_, ref: ForwardedRef<LoginHandler>) => {
   };
 
   useEffect(() => {
-    // alert('Please login....');
-    // return () => alert('logined');
-  }, []);
+    console.log('Please login....');
+    plusCount();
+    return () => {
+      console.log('logined');
+      minusCount();
+    };
+  }, [plusCount, minusCount]);
+  const { reset, clear } = useTimeout(() => console.log('X=', count), 1000, [
+    count,
+  ]);
+  const [isShow, toggle] = useToggle(false);
 
   return (
     <>
+      <button
+        onClick={toggle}
+        style={{ border: `5px solid ${isShow ? 'yellow' : 'pink'}` }}
+      >
+        {isShow ? 'Hide' : 'Show'}
+      </button>
+      <div>
+        <button
+          onClick={() => {
+            reset;
+            console.log(count);
+          }}
+        >
+          useTimeout reset
+        </button>
+        <button onClick={clear}>useTimeout clear</button>
+      </div>
+
       <form onSubmit={makeLogin}>
         <div>
           <span style={{ marginRight: '1em' }}>LoginID:</span>

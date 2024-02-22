@@ -1,9 +1,14 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 
 export default function Effect() {
   // const [isShow, setShow] = useState(false);
   const [count, setCount] = useState(0);
+
   const hRef = useRef<HTMLHeadingElement>(null);
+
+  useLayoutEffect(() => {
+    console.log('layoutEffect');
+  }, []);
   useEffect(() => {
     if (!hRef.current) return;
 
@@ -11,7 +16,7 @@ export default function Effect() {
     const pos = hRef.current.getBoundingClientRect();
     console.log('🚀 ~ useEffect ~ pos:', pos);
 
-    hRef.current.style.top = `${pos.bottom + count * 0.1}px`;
+    hRef.current.style.top = `${pos.top * 0.1}px`;
     setCount((p) => p + 1);
   }, [count]);
   return (
