@@ -31,27 +31,60 @@ type ProviderProps = {
   children: ReactNode;
   myHandlerRef?: RefObject<ItemHandler>;
 };
+type ReducerAction = {
+  type: string;
+  payload?: any;
+};
+type Action =
+  | { type: 'set'; payload: Session }
+  | { type: 'logout' }
+  | { type: 'login'; payload: { id: number; name: string } };
 
 // TODO: login, logout,saveItem, removeItem 등 useReducer를 활용하여 합쳐보자!!!
-// const reducer = (session, action) => {
-//   switch (action.type) {
-//     case 'login':
-//       return { ...session, loginUser: action.payload };
-//     case: 'logout':
-//       return
-//     default:
-//       return session;
-//   }
-// };
+const reducer = (session: Session, action: Action) => {
+  if (action.type === 'set') {
+    console.log(action.payload);
+    return { ...action.payload };
+  }
+  if (action.type === 'logout') {
+    return { ...session, loginUser: null };
+  }
+  if (action.type === 'login') {
+    console.log(action.payload.id);
+    console.log(action.payload.name);
+    return { ...session, loginUser: {...action.payload} };
+  }
+  // switch (action.type) {
+  //   case 'logout':
+  //     return
+  //   default:
+  //     return session;
+  // }
+  return session;
+};
 
 export const SessionProvider = ({ children, myHandlerRef }: ProviderProps) => {
-  // const [session2, dispatch] = useReducer(reducer, {});
-  // const login = () => dispatch({ type: 'login' });
-
-  const [session, setSession] = useState<Session>({
+  const [session, dispatch] = useReducer(reducer, {
     loginUser: null,
     cart: [],
   });
+  const setSession = (payload: Session) => {
+    dispatch({ type: 'set', payload });
+  };
+  const logout = () => {
+    dispatch({ type: 'logout' });
+  };
+  // TODO:!!!!
+  // const login=(payload: { id: number; name: string })=>{
+  //   dispatch({type:'login',payload})
+  // }
+
+  // const login = () => dispatch({ type: 'login' });
+
+  // const [session, setSession] = useState<Session>({
+  //   loginUser: null,
+  //   cart: [],
+  // });
   const totalPrice = useMemo(
     () => session.cart.reduce((acc, obj) => acc + obj.price, 0),
     [session.cart]
@@ -78,9 +111,9 @@ export const SessionProvider = ({ children, myHandlerRef }: ProviderProps) => {
     setSession({ ...session, loginUser: { id, name } });
   };
 
-  const logout = () => {
-    setSession({ ...session, loginUser: null });
-  };
+  // const logout = () => {
+  //   setSession({ ...session, loginUser: null });
+  // };
 
   const removeItem = (itemId?: number) => {
     setSession({
