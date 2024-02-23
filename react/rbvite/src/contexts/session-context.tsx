@@ -5,10 +5,11 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useMemo,
+  useReducer,
   useState,
 } from 'react';
 import { ItemHandler } from '../components/My';
-
 
 type SessionContextProps = {
   session: Session;
@@ -16,6 +17,7 @@ type SessionContextProps = {
   logout: () => void;
   removeItem: (itemId: number) => void;
   saveItem: ({ id, name, price }: Cart) => void;
+  totalPrice: number;
 };
 const SessionContext = createContext<SessionContextProps>({
   session: { loginUser: null, cart: [] },
@@ -23,47 +25,64 @@ const SessionContext = createContext<SessionContextProps>({
   logout: () => {},
   removeItem: () => {},
   saveItem: () => {},
+  totalPrice: 0,
 });
 type ProviderProps = {
   children: ReactNode;
   myHandlerRef?: RefObject<ItemHandler>;
 };
 
+// TODO: login, logout,saveItem, removeItem 등 useReducer를 활용하여 합쳐보자!!!
+// const reducer = (session, action) => {
+//   switch (action.type) {
+//     case 'login':
+//       return { ...session, loginUser: action.payload };
+//     case: 'logout':
+//       return
+//     default:
+//       return session;
+//   }
+// };
+
 export const SessionProvider = ({ children, myHandlerRef }: ProviderProps) => {
+  // const [session2, dispatch] = useReducer(reducer, {});
+  // const login = () => dispatch({ type: 'login' });
+
   const [session, setSession] = useState<Session>({
     loginUser: null,
     cart: [],
   });
-
-  const login = useCallback(
-    (id: number, name: string) => {
-      const loginNoti = myHandlerRef?.current?.loginHandler.noti || alert;
-      console.log('🚀  loginNoti:', loginNoti, id, name);
-
-      const focusId = myHandlerRef?.current?.loginHandler.focusId;
-      const focusName = myHandlerRef?.current?.loginHandler.focusName;
-
-      if (!id || isNaN(id)) {
-        loginNoti('User id을 입력하세요!');
-        if (focusId) focusId();
-        return;
-      }
-
-      if (!name) {
-        loginNoti('User name을 입력하세요!');
-        if (focusName) focusName();
-        return;
-      }
-      setSession({ ...session, loginUser: { id, name } });
-    },
-    [myHandlerRef]
+  const totalPrice = useMemo(
+    () => session.cart.reduce((acc, obj) => acc + obj.price, 0),
+    [session.cart]
   );
 
-  const logout = useCallback(() => {
-    setSession({ ...session, loginUser: null });
-  }, []);
+  const login = (id: number, name: string) => {
+    const loginNoti = myHandlerRef?.current?.loginHandler.noti || alert;
+    console.log('🚀  loginNoti:', loginNoti, id, name);
 
-  const removeItem = useCallback((itemId?: number) => {
+    const focusId = myHandlerRef?.current?.loginHandler.focusId;
+    const focusName = myHandlerRef?.current?.loginHandler.focusName;
+
+    if (!id || isNaN(id)) {
+      loginNoti('User id을 입력하세요!');
+      if (focusId) focusId();
+      return;
+    }
+
+    if (!name) {
+      loginNoti('User name을 입력하세요!');
+      if (focusName) focusName();
+      return;
+    }
+    setSession({ ...session, loginUser: { id, name } });
+  };
+
+  const logout = () => {
+    setSession({ ...session, loginUser: null });
+  };
+
+  const removeItem = (itemId?: number) => {
     setSession({
       ...session,
       // cart: [...session.cart.filter((item) => item.id !== itemId)], // 더 순수함수에 가깝게 보임
@@ -71,9 +90,9 @@ export const SessionProvider = ({ children, myHandlerRef }: ProviderProps) => {
     });
     // VirtualDOM의 rerender가 호출 안함(:session의 주소는 안변했으니까!)
     // session.cart = session.cart.filter((item) => item.id !== itemId);
-  }, []);
+  };
 
-  const saveItem = useCallback(({ id, name, price }: Cart) => {
+  const saveItem = ({ id, name, price }: Cart) => {
     const { cart } = session;
     const foundItem = id !== 0 && cart.find((item) => item.id === id);
     if (!foundItem) {
@@ -85,9 +104,9 @@ export const SessionProvider = ({ children, myHandlerRef }: ProviderProps) => {
     }
     setSession({
       ...session,
-      // cart: [...cart],
+      cart: [...cart],
     });
-  }, []);
+  };
 
   useEffect(() => {
     const controller = new AbortController();
@@ -109,7 +128,7 @@ export const SessionProvider = ({ children, myHandlerRef }: ProviderProps) => {
   return (
     <>
       <SessionContext.Provider
-        value={{ session, login, logout, removeItem, saveItem }}
+        value={{ session, login, logout, removeItem, saveItem, totalPrice }}
       >
         {children}
       </SessionContext.Provider>

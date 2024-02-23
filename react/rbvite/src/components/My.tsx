@@ -23,6 +23,7 @@ const My = forwardRef((_, ref: ForwardedRef<ItemHandler>) => {
     session: { loginUser, cart },
     removeItem,
     saveItem,
+    totalPrice,
   } = useSession();
   const itemNameRef = useRef<HTMLInputElement>(null);
   const itemPriceRef = useRef<HTMLInputElement>(null);
@@ -98,6 +99,7 @@ const My = forwardRef((_, ref: ForwardedRef<ItemHandler>) => {
           <Login ref={loginHandlerRef} />
         )}
       </div>
+
       <div>
         <h2>장바구니</h2>
         <ul style={{ listStyle: 'none', padding: '0' }}>
@@ -142,7 +144,11 @@ const My = forwardRef((_, ref: ForwardedRef<ItemHandler>) => {
           ))}
         </ul>
       </div>
-
+      <div>
+        <strong style={{ color: 'red' }}>
+          총 {totalPrice.toLocaleString()}원
+        </strong>
+      </div>
       <h2>상품</h2>
       <form onSubmit={saveCartItem} onReset={() => setCurrId(0)}>
         {/* itemIdRef.current = 0 */}
