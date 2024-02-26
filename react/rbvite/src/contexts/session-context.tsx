@@ -84,24 +84,10 @@ export const SessionProvider = ({ children, myHandlerRef }: ProviderProps) => {
     loginUser: null,
     cart: [],
   });
-  // const setSession = (payload: Session) => {
-  //   dispatch({ type: 'set', payload });
-  // };
 
-  // TODO:!!!!
-  // const login=(payload: { id: number; name: string })=>{
-  //   dispatch({type:'login',payload})
-  // }
-
-  // const login = () => dispatch({ type: 'login' });
-
-  // const [session, setSession] = useState<Session>({
-  //   loginUser: null,
-  //   cart: [],
-  // });
   const totalPrice = useMemo(
     () => session.cart.reduce((acc, obj) => acc + obj.price, 0),
-    [session.cart]
+    [session]
   );
 
   const login = (id: number, name: string) => {

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useCallback, useEffect, useRef } from 'react';
 
 export const useTimeout = (
@@ -13,23 +14,34 @@ export const useTimeout = (
   delayRef.current = delay;
 
   const setup = useCallback(() => {
-    // console.log('set-up', delay, delayRef.current);
+    // console.log('set-up!!', delay, delayRef.current);
+    //                      &100,  &800.current
+    // timerRef.current = setTimeout(cbRef.current, delay);
     timerRef.current = setTimeout(cbRef.current, delayRef.current);
+    //                            &900.current,  &800.current
+    // timerRef.current = setTimeout(cb, delay);
   }, []);
+  // const setup = () => {
+  //   console.log('set-up!!', delay);
+  //   // timerRef.current = setTimeout(cbRef.current, delay);
+  //   timerRef.current = setTimeout(cb, delay);
+  // };
 
   const clear = useCallback(() => {
-    // console.log('clear');
+    // console.log('clear!!');
     clearTimeout(timerRef.current);
   }, []);
 
   const reset = useCallback(() => {
-    console.log('reset');
+    // console.log('reset!!');
     clear();
     setup();
   }, [setup, clear]);
 
   useEffect(() => {
+    // timerRef.current = setTimeout(cb, delay);
     setup();
+
     return clear;
   }, dependencies);
 

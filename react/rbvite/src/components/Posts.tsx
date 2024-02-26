@@ -5,6 +5,7 @@ import { FaAngleDown } from 'react-icons/fa6';
 import { Login } from './Login';
 import { useToggle } from '../hooks/toggle';
 import { useFetch } from '../hooks/fetch';
+import clsx from 'clsx';
 
 type PostType = {
   userId: number;
@@ -54,15 +55,24 @@ const Post = ({ post }: { post: PostType }) => {
   const [isOpen, toggleOpen] = useToggle();
 
   return (
-    <li className='text-sm'>
-      {post.title}
+    // <li
+    //   className={clsx(
+    //     isOpen && 'isActive',
+    //     isOpen && 'border',
+    //     'border-green-500'
+    //   )}
+    // >
+    <li className={clsx({ border: isOpen, 'border-green-500': isOpen })}>
+      <strong className={clsx({ 'text-green-500': isOpen })}>
+        {post.title}
+      </strong>
       <button
         onClick={() => toggleOpen()}
         className='rounded ml-3 text-green-600'
       >
         {isOpen ? <FaAngleUp /> : <FaAngleDown />}
       </button>
-      {isOpen && <div>{post.body}</div>}
+      {isOpen && <div className={'text-sm'}>{post.body}</div>}
     </li>
   );
 };

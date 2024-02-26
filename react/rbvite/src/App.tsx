@@ -7,6 +7,7 @@ import { SessionProvider } from './contexts/session-context';
 import { flushSync } from 'react-dom';
 import Posts from './components/Posts';
 import MouseCapture from './components/MouseCapture';
+import DeferTrans from './components/DeferTrans';
 
 const H5 = forwardRef(({ ss }: { ss: string }, ref: Ref<HTMLInputElement>) => {
   return (
@@ -30,6 +31,8 @@ function App() {
   return (
     <>
       <MouseCapture />
+      {/* <DeferTrans /> */}
+
       <h1 ref={titleRef} style={{ color: 'white', backgroundColor: 'green' }}>
         Vite + React
       </h1>
