@@ -13,12 +13,12 @@ export const useTimeout = (
   delayRef.current = delay;
 
   const setup = useCallback(() => {
-    console.log('set-up', delay, delayRef.current);
+    // console.log('set-up', delay, delayRef.current);
     timerRef.current = setTimeout(cbRef.current, delayRef.current);
   }, []);
 
   const clear = useCallback(() => {
-    console.log('clear');
+    // console.log('clear');
     clearTimeout(timerRef.current);
   }, []);
 

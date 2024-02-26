@@ -23,7 +23,7 @@ const CounterContext = createContext<CounterContextProps>({
 });
 
 const reducer = (count: number, { type, payload = 1 }: ReducerAction) => {
-  console.log('🚀  payload:', payload);
+  // console.log('🚀  payload:', payload);
   switch (type) {
     case 'plus':
       return count + payload;

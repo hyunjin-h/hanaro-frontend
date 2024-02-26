@@ -43,11 +43,9 @@ export default function Posts() {
           </>
         )}
         <h1>
-          #{loginUser?.id}의 게시글 수: {posts.length}
+          #{loginUser?.id}의 게시글 수: {posts?.length}
         </h1>
-        {posts.map((post) => (
-          <Post key={post.id} post={post} />
-        ))}
+        {posts?.map((post) => <Post key={post.id} post={post} />)}
       </ul>
     </div>
   );
