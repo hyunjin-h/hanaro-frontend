@@ -1,9 +1,18 @@
-// import { Navigate } from 'react-router-dom';
 
-// export const NotFound = () => {
-//   <h1>Page Not Found (404)</h1>;
+import { useNavigate } from 'react-router-dom';
+import { useTimeout } from './hooks/timeout';
 
-//   // navigate(-1)은 이전값으로 감
-//   // return <Navigate to='/'/>
-// };
-export const NotFound = () => <h1>Page Not Found (404)</h1>;
+export const NotFound = () => {
+  console.log('NotFound>>>', location.pathname);
+  const navigate = useNavigate();
+  // useTimeout(() => navigate('/'), 2000);
+  useTimeout(() => navigate(-1), 2000);
+  return (
+    <h1>
+      <strong className='text-red-500'>{location.pathname}</strong> Page Not
+      Found (404)
+    </h1>
+  );
+
+  // return <Navigate to='/' />;
+};

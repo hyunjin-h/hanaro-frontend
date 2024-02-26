@@ -34,7 +34,7 @@ export default function Posts() {
   return (
     <div className='active'>
       {isLoading && <h1>Fetching Posts...</h1>}
-      {error && <h3 style={{ color: 'red' }}>Error: {error}</h3>}
+      {error && <h3 style={{ color: 'gray' }}>Error: {error}</h3>}
       <h3>#{loginUser?.id}`s Posts</h3>
       <ul className='un-list'>
         {!loginUser && (
@@ -63,7 +63,7 @@ const Post = ({ post }: { post: PostType }) => {
     //   )}
     // >
     <li className={clsx({ border: isOpen, 'border-green-500': isOpen })}>
-      <strong className={clsx({ 'text-green-500': isOpen })}>
+      <strong className={clsx(isOpen && 'text-green-500 underline', 'italic')}>
         {post.title}
       </strong>
       <button
@@ -72,7 +72,7 @@ const Post = ({ post }: { post: PostType }) => {
       >
         {isOpen ? <FaAngleUp /> : <FaAngleDown />}
       </button>
-      {isOpen && <div className={'text-sm'}>{post.body}</div>}
+      {isOpen && <div className={'text-sm text-gray-500'}>{post.body}</div>}
     </li>
   );
 };

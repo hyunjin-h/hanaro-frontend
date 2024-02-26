@@ -6,13 +6,12 @@ import {
   useTransition,
 } from 'react';
 import { useTimeout } from '../hooks/timeout';
-// import { useDebounce } from '../hooks/debounce';
 
 type List = {
   id: number;
   value: string;
 };
-// TODO: !
+
 const useDebounce = (
   cb: () => void,
   delay: number,
@@ -57,12 +56,13 @@ export default function DeferTrans() {
 
   // useEffect(() => {
   //   const timer = setTimeout(() => {
-  //     console.log('>>>>>>>>>>>>>>');
+  //     console.log('******>>>', searchStr);
   //     setDebounceStr(searchStr);
   //   }, 500);
 
   //   return () => clearTimeout(timer);
   // }, [searchStr]);
+
   return (
     <>
       <input
@@ -71,7 +71,7 @@ export default function DeferTrans() {
         className='border border-red-500 rounded-lg'
       />
       <h2 className=' text-blue-500'>{searchStr}</h2>
-      <h2 className=' text-blue-500'>{debounceStr}</h2>
+      <h2 className=' text-green-500'>{debounceStr}</h2>
       {/* <h2 className=' text-red-500'>{deferredSearchStr}</h2> */}
       {isPending && <h1 className='text-lg'>Loading...</h1>}
       <ul>

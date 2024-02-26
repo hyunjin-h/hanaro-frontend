@@ -11,7 +11,7 @@ import DeferTrans from './components/DeferTrans';
 import { Nav } from './Nav';
 import { Route, Routes } from 'react-router-dom';
 import { Home } from './components/Home';
-import { Login } from './components/Login';
+import { Login, LoginHandler } from './components/Login';
 import { NotFound } from './NotFound';
 
 const H5 = forwardRef(({ ss }: { ss: string }, ref: Ref<HTMLInputElement>) => {
@@ -27,17 +27,15 @@ H5.displayName = 'H5';
 
 function App() {
   const myHandlerRef = useRef<ItemHandler>(null);
-  const titleRef = useRef<HTMLHeadingElement>(null);
-  const childInputRef = createRef<HTMLInputElement>();
+  const loginHandlerRef = useRef<LoginHandler>(null);
 
-  // console.log('Declare-Area!');
   return (
     <>
       <SessionProvider myHandlerRef={myHandlerRef}>
         <Nav />
         <Routes>
           <Route path='/' element={<Home />} />
-          <Route path='/login' element={<Login />} />
+          <Route path='/login' element={<Login ref={loginHandlerRef} />} />
           <Route path='/my' element={<My ref={myHandlerRef} />} />
           <Route path='/posts' element={<Posts />} />
           {/* <Route path='/items' element={<Items />} />
@@ -45,14 +43,15 @@ function App() {
           <Route path='/hello' element={<Hello />} />
           <Route path='*' element={<NotFound />} />
         </Routes>
+      </SessionProvider>
 
-        {/* <DeferTrans /> */}
+      {/* <DeferTrans /> */}
 
-        {/* <h1 ref={titleRef} style={{ color: 'white', backgroundColor: 'green' }}>
+      {/* <h1 ref={titleRef} style={{ color: 'white', backgroundColor: 'green' }}>
           Vite + React
         </h1> */}
-        {/* <H5 ss={`First-Component ${count}`} ref={childInputRef} /> */}
-        {/* <button
+      {/* <H5 ss={`First-Component ${count}`} ref={childInputRef} /> */}
+      {/* <button
           onClick={() => {
             if (childInputRef.current) {
               childInputRef.current.value = 'XXXX';
@@ -62,7 +61,7 @@ function App() {
         >
           call H5 input
         </button> */}
-        {/* <button onClick={() => myHandlerRef.current?.signOut()}>
+      {/* <button onClick={() => myHandlerRef.current?.signOut()}>
           App-Sign-Out
         </button>
         <button onClick={() => myHandlerRef.current?.removeItem()}>
@@ -73,7 +72,7 @@ function App() {
         </button>
         <button onClick={() => myHandlerRef.current?.removeItem()}>Rm2</button> */}
 
-        {/* <div className='card'>
+      {/* <div className='card'>
           <button
             onClick={() => {
               flushSync(plusCount);
@@ -82,9 +81,8 @@ function App() {
             count is {count}
           </button>
         </div> */}
-        {/* setCount(count+1) 과의 차이점 확인
+      {/* setCount(count+1) 과의 차이점 확인
         flushSync는 강제로 throttle 무마시킴 10번 rerender함 => no-batch-render */}
-      </SessionProvider>
 
       {/* <button
         onClick={() => titleRef.current?.scrollIntoView({ behavior: 'smooth' })}

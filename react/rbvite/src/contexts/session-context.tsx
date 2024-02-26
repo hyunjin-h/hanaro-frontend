@@ -11,6 +11,7 @@ import {
 } from 'react';
 import { ItemHandler } from '../components/My';
 import { useFetch } from '../hooks/fetch';
+import { LoginHandler } from '../components/Login';
 
 type SessionContextProps = {
   session: Session;
@@ -31,6 +32,7 @@ const SessionContext = createContext<SessionContextProps>({
 type ProviderProps = {
   children: ReactNode;
   myHandlerRef?: RefObject<ItemHandler>;
+  loginHandlerRef?: RefObject<LoginHandler>;
 };
 
 type Action =
@@ -61,11 +63,10 @@ const reducer = (session: Session, { type, payload }: Action) => {
         const maxId = Math.max(...session.cart.map((item) => item.id), 0);
         // cart.push({ id: maxId + 1, name, price }); //Bug!! StrictMode
         return { ...session, cart: [...cart, { id: maxId + 1, name, price }] }; //새로 메모리 주소 만들어서(?)...
-      } else {
-        foundItem.name = name;
-        foundItem.price = price;
-        return { ...session };
       }
+      foundItem.name = name;
+      foundItem.price = price;
+      return { ...session };
     }
 
     case 'removeItem':
@@ -79,7 +80,11 @@ const reducer = (session: Session, { type, payload }: Action) => {
   }
 };
 
-export const SessionProvider = ({ children, myHandlerRef }: ProviderProps) => {
+export const SessionProvider = ({
+  children,
+  myHandlerRef,
+  loginHandlerRef,
+}: ProviderProps) => {
   const [session, dispatch] = useReducer(reducer, {
     loginUser: null,
     cart: [],
@@ -90,7 +95,7 @@ export const SessionProvider = ({ children, myHandlerRef }: ProviderProps) => {
     [session]
   );
 
-  const login = (id: number, name: string) => {
+  const login = useCallback((id: number, name: string) => {
     const loginNoti = myHandlerRef?.current?.loginHandler.noti || alert;
     console.log('🚀  loginNoti:', loginNoti, id, name);
 
@@ -111,7 +116,7 @@ export const SessionProvider = ({ children, myHandlerRef }: ProviderProps) => {
 
     dispatch({ type: 'login', payload: { id, name } });
     // setSession({ ...session, loginUser: { id, name } });
-  };
+  }, []);
 
   const logout = () => {
     // setSession({ ...session, loginUser: null });
@@ -119,7 +124,7 @@ export const SessionProvider = ({ children, myHandlerRef }: ProviderProps) => {
     dispatch({ type: 'logout', payload: null });
   };
 
-  const removeItem = (itemId?: number) => {
+  const removeItem = useCallback((itemId?: number) => {
     // setSession({
     //   ...session,
     //   // cart: [...session.cart.filter((item) => item.id !== itemId)], // 더 순수함수에 가깝게 보임
@@ -128,7 +133,7 @@ export const SessionProvider = ({ children, myHandlerRef }: ProviderProps) => {
     dispatch({ type: 'removeItem', payload: itemId });
     // VirtualDOM의 rerender가 호출 안함(:session의 주소는 안변했으니까!)
     // session.cart = session.cart.filter((item) => item.id !== itemId);
-  };
+  }, []);
 
   const saveItem = useCallback(({ id, name, price }: Cart) => {
     dispatch({ type: 'saveItem', payload: { id, name, price } });
@@ -141,29 +146,12 @@ export const SessionProvider = ({ children, myHandlerRef }: ProviderProps) => {
   const { data, error } = useFetch<Session>({
     url: '/data/sample.json',
   });
+
   useEffect(() => {
     if (data) {
       dispatch({ type: 'set', payload: data });
     }
   }, [data]);
-
-  // useEffect(() => {
-  //   const controller = new AbortController();
-  //   const { signal } = controller;
-
-  //   (async function () {
-  //     const res = await fetch('/data/sample.json', {
-  //       signal,
-  //     });
-  //     const data = await res.json();
-  //     setSession(data);
-  //     dispatch({ type: 'set', payload: data });
-  //   })();
-
-  //   return () => {
-  //     controller.abort();
-  //   };
-  // }, []);
 
   return (
     <>
