@@ -28,6 +28,28 @@ export const Nav = () => (
       </li>
       <li>
         <NavLink
+          to='/posts/5'
+          style={({ isActive }) => {
+            // console.log({ isActive, isPending });
+            return { color: isActive ? 'red' : 'inherit' };
+          }}
+        >
+          Posts5
+        </NavLink>
+      </li>
+      <li>
+        <NavLink
+          to='/v1/items'
+          style={({ isActive }) => {
+            // console.log({ isActive, isPending });
+            return { color: isActive ? 'red' : 'inherit' };
+          }}
+        >
+          Item
+        </NavLink>
+      </li>
+      <li>
+        <NavLink
           to='/hello'
           className={({ isActive, isPending, isTransitioning }) =>
             clsx({

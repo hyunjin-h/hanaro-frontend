@@ -1,18 +1,20 @@
-import { Ref, createRef, forwardRef, useRef } from 'react';
-import './App.css';
-import Hello from './components/Hello';
-import My, { ItemHandler } from './components/My';
-import { useCounter } from './contexts/counter-context';
-import { SessionProvider } from './contexts/session-context';
-import { flushSync } from 'react-dom';
-import Posts from './components/Posts';
-import MouseCapture from './components/MouseCapture';
-import DeferTrans from './components/DeferTrans';
-import { Nav } from './Nav';
+import { Ref, forwardRef, useRef } from 'react';
 import { Route, Routes } from 'react-router-dom';
+import './App.css';
+import { Nav } from './Nav';
+import { NotFound } from './NotFound';
+import Hello from './components/Hello';
 import { Home } from './components/Home';
 import { Login, LoginHandler } from './components/Login';
-import { NotFound } from './NotFound';
+import My, { ItemHandler } from './components/My';
+import Post from './components/Post';
+import Posts from './components/Posts';
+import { SessionProvider } from './contexts/session-context';
+import { PostLayout } from './components/PostLayout';
+import { PostDetail } from './components/PostDetail';
+import { ItemLayout } from './components/items_v1/ItemLayout';
+import { Item } from './components/items_v1/Item';
+import { Items } from './components/items_v1/Items';
 
 const H5 = forwardRef(({ ss }: { ss: string }, ref: Ref<HTMLInputElement>) => {
   return (
@@ -37,7 +39,16 @@ function App() {
           <Route path='/' element={<Home />} />
           <Route path='/login' element={<Login ref={loginHandlerRef} />} />
           <Route path='/my' element={<My ref={myHandlerRef} />} />
-          <Route path='/posts' element={<Posts />} />
+
+          <Route path='/posts' element={<PostLayout />}>
+            <Route index element={<Posts />} />
+            <Route path=':id' element={<PostDetail />} />
+          </Route>
+          <Route path='/v1/items' element={<ItemLayout />}>
+            <Route index element={<Items />} />
+            <Route path=':id' element={<Item />} />
+          </Route>
+          {/* <Route path='/posts/:id' element={<Posts />} /> */}
           {/* <Route path='/items' element={<Items />} />
         <Route path='/items/:id' element={<Item />} /> */}
           <Route path='/hello' element={<Hello />} />
