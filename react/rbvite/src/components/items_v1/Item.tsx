@@ -34,8 +34,23 @@ function ItemRead({ item, toggleEditing }: Prop) {
 
 const ItemUpdate = ({ item, toggleEditing }: Prop) => {
   const { saveItem } = useSession();
+
+  const [isDirty, setDirty] = useState(false);
   const itemNameRef = useRef<HTMLInputElement>(null);
   const itemPriceRef = useRef<HTMLInputElement>(null);
+
+  // const checkDirty = (e: ChangeEvent<HTMLInputElement>) => {
+  const checkDirty = () => {
+    // const inpName: Field = e.currentTarget.name as Field;
+    // const inpRef = e.currentTarget.name === 'name' ? itemNameRef : itemPriceRef;
+    // setDirty(inpRef.current?.value !== item[inpName]);
+
+    // cf
+    setDirty(
+      itemNameRef.current?.value !== item.name ||
+        Number(itemPriceRef.current?.value) !== item.price
+    );
+  };
 
   const saveCartItem = (e: React.FormEvent) => {
     e.preventDefault();
@@ -67,9 +82,11 @@ const ItemUpdate = ({ item, toggleEditing }: Prop) => {
     <form onSubmit={saveCartItem} onReset={toggleEditing} className='p-5'>
       <input
         type='text'
+        name='price'
         ref={itemNameRef}
         placeholder='상품명...'
         className='border-2 border-sky-300 rounded-md'
+        onChange={checkDirty}
       />
       <input
         type='number'
@@ -77,23 +94,37 @@ const ItemUpdate = ({ item, toggleEditing }: Prop) => {
         placeholder='금액...'
         className='border-2 border-sky-300 rounded-md mt-2'
       />
-      <div className='p-5'>
-        <button type='reset' className='mx-5'>
-          취소
-        </button>
-        <button type='submit' className='btn-primary'>
-          수정
-        </button>
-      </div>
+      {isDirty && (
+        <div className='p-5'>
+          <button type='reset' className='mx-5'>
+            취소
+          </button>
+          <button type='submit' className='btn-primary'>
+            수정
+          </button>
+        </div>
+      )}
     </form>
   );
 };
 // detail(read | update)
 export const Item = () => {
-  const { item } = useOutletContext<{ item: Cart }>();
-  const [isEditing, toggleEditing] = useReducer((pre) => !pre, false);
+  const [item, setItem] = useState<Cart>({ id: 0, name: '', price: 0 });
+  const { item: itemData } = useOutletContext<{ item: Cart }>();
+  const { id } = useParams();
+  const {
+    session: { cart },
+  } = useSession();
 
-  const [item, setItem] = useState<Cart | null>(null);
+  useEffect(() => {
+    if (!itemData && id && cart.length) {
+      setItem(cart.find((cartItem) => cartItem.id === +id)!);
+    } else if (itemData) {
+      setItem(itemData);
+    }
+  }, [cart, id, itemData]);
+
+  const [isEditing, toggleEditing] = useReducer((pre) => !pre, false);
 
   return (
     <>

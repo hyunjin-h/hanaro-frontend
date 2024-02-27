@@ -26,9 +26,11 @@ export default function Posts() {
   console.log(location);
 
   const [searchParams] = useSearchParams({ q: '' });
-  const r = searchParams.get('r');
+  const r = searchParams.get('r'); //r=(~~~)
   const q = searchParams.get('q');
-  // useTimeout(() => setSearchParams({ q: 'qqq' }), 1000);
+  // useTimeout(() => setSearchParams({ q: 'qqq' }), 1000); // ?q=qqq
+  //items?id=1
+  //items/1
   const [searchStr, setSearchStr] = useState(''); // 검색어 유지 가능
   useEffect(() => {
     setSearchStr(q || '');

@@ -10,6 +10,7 @@ import { useSession } from '../contexts/session-context';
 import { useCounter } from '../contexts/counter-context';
 import { useTimeout } from '../hooks/timeout';
 import { useToggle } from '../hooks/toggle';
+import { useNavigate } from 'react-router-dom';
 
 export type LoginHandler = {
   noti: (msg: string) => void;
@@ -22,6 +23,7 @@ export const Login = forwardRef((_, ref: ForwardedRef<LoginHandler>) => {
   const idRef = useRef<HTMLInputElement | null>(null);
   const nameRef = useRef<HTMLInputElement | null>(null);
   const { count, plusCount, minusCount } = useCounter();
+  const navigate = useNavigate();
 
   const handler = {
     noti: (msg: string) => alert(msg),
@@ -50,7 +52,9 @@ export const Login = forwardRef((_, ref: ForwardedRef<LoginHandler>) => {
     console.log('🚀  id:', id);
     const name = nameRef.current?.value;
     console.log('🚀  name:', name);
-    login(id, name ?? '');
+    if (login(id, name ?? '')) {
+      navigate('/my');
+    }
   };
 
   useEffect(() => {

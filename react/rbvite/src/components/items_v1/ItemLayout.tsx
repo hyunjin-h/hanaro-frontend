@@ -3,28 +3,27 @@ import { Outlet, useNavigate } from 'react-router-dom';
 import { useSession } from '../../contexts/session-context';
 
 export const ItemLayout = () => {
+  const navigate = useNavigate();
   const {
     session: { cart },
   } = useSession();
 
   const [currItem, setCurrItem] = useState<Cart | null>(null);
-  const navigate = useNavigate();
 
-  const goItem = (item: Cart) => {
-    setCurrItem(item);
-    navigate(`/v1/items/${item.id}`);
-  };
+  // const goItem = (item: Cart) => {
+  //   setCurrItem(item);
+  //   navigate(`/v1/items/${item.id}`);
+  // };
   return (
     <>
       <div className='flex flex-row'>
-        <ul className='basis-1/4'>
+        <ul className='basis-1/2'>
           {cart.map((item) => (
             <li key={item.id}>
               <button
                 onClick={() => {
                   setCurrItem(item);
                   navigate(`/v1/items/${item.id}`);
-                  // goItem(item);
                 }}
               >
                 {item.name}
@@ -32,8 +31,7 @@ export const ItemLayout = () => {
             </li>
           ))}
         </ul>
-
-        <div className='border-green-700'>
+        <div className='basis-1/2 border border-green-400 rounded-md'>
           <Outlet context={{ item: currItem }} />
         </div>
       </div>
