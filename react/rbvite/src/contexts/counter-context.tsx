@@ -1,10 +1,8 @@
 import {
   PropsWithChildren,
   createContext,
-  useCallback,
   useContext,
   useReducer,
-  useState,
 } from 'react';
 type CounterContextProps = {
   count: number;

@@ -7,10 +7,8 @@ import {
   useEffect,
   useMemo,
   useReducer,
-  useState,
 } from 'react';
 import { ItemHandler } from '../components/My';
-import { useFetch } from '../hooks/fetch';
 import { LoginHandler } from '../components/Login';
 
 type SessionContextProps = {
@@ -21,14 +19,6 @@ type SessionContextProps = {
   saveItem: ({ id, name, price }: Cart) => void;
   totalPrice: number;
 };
-const SessionContext = createContext<SessionContextProps>({
-  session: { loginUser: null, cart: [] },
-  login: () => false,
-  logout: () => {},
-  removeItem: () => {},
-  saveItem: () => {},
-  totalPrice: 0,
-});
 type ProviderProps = {
   children: ReactNode;
   myHandlerRef?: RefObject<ItemHandler>;
@@ -40,6 +30,36 @@ type Action =
   | { type: 'set'; payload: Session }
   | { type: 'saveItem'; payload: Cart }
   | { type: 'removeItem'; payload: number };
+
+const SKEY = 'session';
+const DefaultSession: Session = {
+  loginUser: null,
+  cart: [],
+};
+
+function getStorage() {
+  const storedData = localStorage.getItem(SKEY);
+  if (storedData) {
+    return JSON.parse(storedData) as Session;
+  }
+
+  setStorage(DefaultSession);
+
+  return DefaultSession;
+}
+
+function setStorage(session: Session) {
+  localStorage.setItem(SKEY, JSON.stringify(session));
+}
+const SessionContext = createContext<SessionContextProps>({
+  session: { loginUser: null, cart: [] },
+  login: () => false,
+  logout: () => {},
+  removeItem: () => {},
+  saveItem: () => {},
+  totalPrice: 0,
+});
+
 // type Action = {
 //   type: 'set' | 'login' | 'logout' | 'saveItem' | 'removeItem';
 //   payload: Session | LoginUser | Cart | number;
@@ -90,27 +110,6 @@ const reducer = (session: Session, { type, payload }: Action) => {
   setStorage(newer);
   return newer;
 };
-
-const SKEY = 'session';
-const DefaultSession: Session = {
-  loginUser: null,
-  cart: [],
-};
-
-function getStorage() {
-  const storedData = localStorage.getItem(SKEY);
-  if (storedData) {
-    return JSON.parse(storedData) as Session;
-  }
-
-  setStorage(DefaultSession);
-
-  return DefaultSession;
-}
-
-function setStorage(session: Session) {
-  localStorage.setItem(SKEY, JSON.stringify(session));
-}
 
 export const SessionProvider = ({
   children,
@@ -193,6 +192,10 @@ export const SessionProvider = ({
   //     dispatch({ type: 'set', payload: data });
   //   }
   // }, [data]);
+
+  useEffect(() => {
+    dispatch({ type: 'set', payload: getStorage() });
+  }, []);
 
   return (
     <>

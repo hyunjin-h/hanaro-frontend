@@ -10,10 +10,6 @@ type Prop = {
 };
 
 function ItemRead({ item, toggleEditing }: Prop) {
-  const {
-    session: { cart },
-  } = useSession();
-
   return (
     <div className='text-right p-5'>
       <div className='border-b border-gray-500'>

@@ -7,7 +7,7 @@ import Hello from './components/Hello';
 import { Home } from './components/Home';
 import { Login, LoginHandler } from './components/Login';
 import My, { ItemHandler } from './components/My';
-import Post from './components/Post';
+
 import Posts from './components/Posts';
 import { SessionProvider } from './contexts/session-context';
 import { PostLayout } from './components/PostLayout';
@@ -15,6 +15,13 @@ import { PostDetail } from './components/PostDetail';
 import { ItemLayout } from './components/items_v1/ItemLayout';
 import { Item } from './components/items_v1/Item';
 import { Items } from './components/items_v1/Items';
+
+import {
+  ItemLayoutV2,
+  ItemsV2,
+  ItemV2,
+  ItemEditV2,
+} from './components/items_v2/itemV2';
 
 const H5 = forwardRef(({ ss }: { ss: string }, ref: Ref<HTMLInputElement>) => {
   return (
@@ -44,9 +51,16 @@ function App() {
             <Route index element={<Posts />} />
             <Route path=':id' element={<PostDetail />} />
           </Route>
+
           <Route path='/v1/items' element={<ItemLayout />}>
             <Route index element={<Items />} />
             <Route path=':id' element={<Item />} />
+          </Route>
+
+          <Route path='/v2/items' element={<ItemLayoutV2 />}>
+            <Route index element={<ItemsV2 />} />
+            <Route path=':id' element={<ItemV2 />} />
+            <Route path=':id/edit' element={<ItemEditV2 />} />
           </Route>
           {/* <Route path='/posts/:id' element={<Posts />} /> */}
           {/* <Route path='/items' element={<Items />} />

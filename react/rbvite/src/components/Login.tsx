@@ -88,7 +88,7 @@ export const Login = forwardRef((_, ref: ForwardedRef<LoginHandler>) => {
 
       <form onSubmit={makeLogin}>
         <div>
-          <span style={{ marginRight: '1em' }}>LoginID:</span>
+          <span style={{ marginRight: '1em' }}>{count}-LoginID:</span>
           <input type='number' ref={idRef} />
         </div>
         <div>
