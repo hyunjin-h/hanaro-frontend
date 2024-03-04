@@ -4,6 +4,7 @@ import App from './App.tsx';
 import './index.css';
 import { CounterProvider } from './contexts/counter-context.tsx';
 import { HashRouter } from 'react-router-dom';
+import Sample from './components/Sample.tsx';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
@@ -15,6 +16,6 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       {/* </BrowserRouter> */}
     </CounterProvider>
 
-    {/* <Sample /> */}
+    <Sample />
   </React.StrictMode>
 );
