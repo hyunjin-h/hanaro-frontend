@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import Link from 'next/link';
 import { store } from '@/lib/store';
-import { Todo } from './todos/layout';
+import { Todo } from './layout';
 
 const getTodos = async () => {
   const { userId } = store;
