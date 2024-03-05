@@ -8,7 +8,7 @@ export type Photo = {
   thumbnailUrl: string;
 };
 
-const getPhotos = async () => {
+export const getPhotos = async () => {
   const id = 1;
   const res = await fetch(
     `https://jsonplaceholder.typicode.com/photos?userId=${id}`,
@@ -25,16 +25,15 @@ export default async function Photos() {
       <h1> Photos</h1>
       <div className='grid grid-cols-4'>
         {photos?.map((photo) => (
-          //eslint-disable-next-line
-          <img
-            alt={photo.title}
-            className='justify-self-center m-1'
-            src={photo.thumbnailUrl}
-            key={photo.id}
-            onClick={() => {
-              <Link href='photos/image'></Link>;
-            }}
-          />
+          <Link key={photo.id} href='photos/image'>
+            {/* eslint-disable-next-line */}
+            <img
+              alt={photo.title}
+              className='justify-self-center m-1'
+              src={photo.thumbnailUrl}
+              key={photo.id}
+            />
+          </Link>
         ))}
       </div>
     </>
